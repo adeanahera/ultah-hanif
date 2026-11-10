@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kumpulan Kata Ulang Tahun</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400&family=DM+Sans:ital,wght@0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500&family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="locked splash-on">
+<div id="progress" aria-hidden="true"></div>
+<canvas id="snow" aria-hidden="true"></canvas>
+<div id="bubbles" aria-hidden="true"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <symbol id="catm" viewBox="0 0 120 120">
+    <ellipse cx="60" cy="114" rx="32" ry="4.5" fill="#000" opacity=".18"/>
+    <path d="M90 98 Q116 94 110 66" stroke="#aab2d6" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <path d="M110 66 L110.5 70" stroke="#8d96bd" stroke-width="9" stroke-linecap="round"/>
+    <ellipse cx="60" cy="90" rx="30" ry="25" fill="#aab2d6"/>
+    <ellipse cx="60" cy="96" rx="17" ry="16" fill="#dfe4f5"/>
+    <ellipse cx="45" cy="111" rx="10" ry="5.5" fill="#aab2d6"/><ellipse cx="75" cy="111" rx="10" ry="5.5" fill="#aab2d6"/>
+    <path d="M30 42 L31 12 L53 29 Z" fill="#aab2d6"/><path d="M90 42 L89 12 L67 29 Z" fill="#aab2d6"/>
+    <path d="M35 35 L36 21 L47 29 Z" fill="#ffb3c6"/><path d="M85 35 L84 21 L73 29 Z" fill="#ffb3c6"/>
+    <ellipse cx="60" cy="52" rx="34" ry="29" fill="#aab2d6"/>
+    <path d="M52 27 L53 34 M68 27 L67 34" stroke="#8d96bd" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M60 2 L49 27 Q60 32 71 27 Z" fill="#ffdde4" stroke="#ff8fab" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="60" cy="3.5" r="4.2" fill="#ff8fab"/><circle cx="56" cy="19" r="1.8" fill="#ff8fab"/><circle cx="64" cy="15" r="1.8" fill="#aab2d6"/>
+    <ellipse cx="46" cy="54" rx="3.6" ry="4.4" fill="#1b2138"/><ellipse cx="74" cy="54" rx="3.6" ry="4.4" fill="#1b2138"/>
+    <circle cx="47.2" cy="52.4" r="1.2" fill="#fff"/><circle cx="75.2" cy="52.4" r="1.2" fill="#fff"/>
+    <ellipse cx="36" cy="63" rx="6" ry="3.6" fill="#ff8fab" opacity=".6"/><ellipse cx="84" cy="63" rx="6" ry="3.6" fill="#ff8fab" opacity=".6"/>
+    <path d="M56 59 h8 l-4 4.6 Z" fill="#ff8fab"/>
+    <path d="M60 63.6 V66 M60 66 Q55 70 51 67 M60 66 Q65 70 69 67" stroke="#1b2138" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <path d="M31 60 L14 56 M31 66 L14 67 M89 60 L106 56 M89 66 L106 67" stroke="#f3f5fa" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M60 83 L47 75 L47 91 Z M60 83 L73 75 L73 91 Z" fill="#ff8fab"/><circle cx="60" cy="83" r="3.8" fill="#ffb3c6"/>
+  </symbol>
+  <symbol id="catf" viewBox="0 0 120 120">
+    <ellipse cx="60" cy="114" rx="32" ry="4.5" fill="#000" opacity=".18"/>
+    <path d="M30 98 Q4 94 10 66" stroke="#ffe5d4" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <path d="M10 66 L9.5 70" stroke="#ffc9a8" stroke-width="9" stroke-linecap="round"/>
+    <ellipse cx="60" cy="90" rx="30" ry="25" fill="#ffe5d4"/>
+    <ellipse cx="60" cy="96" rx="17" ry="16" fill="#fff6ef"/>
+    <ellipse cx="45" cy="111" rx="10" ry="5.5" fill="#ffe5d4"/><ellipse cx="75" cy="111" rx="10" ry="5.5" fill="#ffe5d4"/>
+    <path d="M30 42 L31 12 L53 29 Z" fill="#ffe5d4"/><path d="M90 42 L89 12 L67 29 Z" fill="#ffe5d4"/>
+    <path d="M35 35 L36 21 L47 29 Z" fill="#ffb3c6"/><path d="M85 35 L84 21 L73 29 Z" fill="#ffb3c6"/>
+    <ellipse cx="60" cy="52" rx="34" ry="29" fill="#ffe5d4"/>
+    <path d="M52 30 L53 37 M68 30 L67 37" stroke="#ffc9a8" stroke-width="2.6" stroke-linecap="round"/>
+    <g transform="translate(60 21)"><circle cx="0" cy="-7.5" r="5.6" fill="#ff8fab"/><circle cx="7.2" cy="-2.3" r="5.6" fill="#ff8fab"/><circle cx="4.5" cy="6" r="5.6" fill="#ff8fab"/><circle cx="-4.5" cy="6" r="5.6" fill="#ff8fab"/><circle cx="-7.2" cy="-2.3" r="5.6" fill="#ff8fab"/><circle cx="0" cy="0" r="4.4" fill="#ffd27a"/></g>
+    <ellipse cx="46" cy="54" rx="3.6" ry="4.4" fill="#1b2138"/><ellipse cx="74" cy="54" rx="3.6" ry="4.4" fill="#1b2138"/>
+    <circle cx="47.2" cy="52.4" r="1.2" fill="#fff"/><circle cx="75.2" cy="52.4" r="1.2" fill="#fff"/>
+    <path d="M40 50 L35.5 46.5 M42.5 48 L39.5 43.5 M80 50 L84.5 46.5 M77.5 48 L80.5 43.5" stroke="#1b2138" stroke-width="1.8" stroke-linecap="round"/>
+    <ellipse cx="36" cy="63" rx="6" ry="3.6" fill="#ff8fab" opacity=".7"/><ellipse cx="84" cy="63" rx="6" ry="3.6" fill="#ff8fab" opacity=".7"/>
+    <path d="M56 59 h8 l-4 4.6 Z" fill="#ff8fab"/>
+    <path d="M60 63.6 V66 M60 66 Q55 70 51 67 M60 66 Q65 70 69 67" stroke="#1b2138" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <path d="M31 60 L14 56 M31 66 L14 67 M89 60 L106 56 M89 66 L106 67" stroke="#f3f5fa" stroke-width="1.6" stroke-linecap="round"/>
+    <rect x="44" y="78" width="32" height="7" rx="3.5" fill="#ff8fab"/><circle cx="60" cy="88" r="4" fill="#ffd27a"/><path d="M58 88 h4" stroke="#c98a5a" stroke-width="1.2"/>
+  </symbol>
+  <symbol id="ico-catb" viewBox="0 0 40 40">
+    <path d="M6 19 L8 4 L18 12 Z M34 19 L32 4 L22 12 Z" fill="#aab2d6"/><path d="M9.5 15 L10 8.5 L14.5 12 Z M30.5 15 L30 8.5 L25.5 12 Z" fill="#ffb3c6"/>
+    <ellipse cx="20" cy="23" rx="15" ry="12.5" fill="#aab2d6"/>
+    <ellipse cx="14.3" cy="22" rx="1.9" ry="2.3" fill="#1b2138"/><ellipse cx="25.7" cy="22" rx="1.9" ry="2.3" fill="#1b2138"/>
+    <ellipse cx="9.5" cy="26.5" rx="3" ry="1.8" fill="#ff8fab" opacity=".6"/><ellipse cx="30.5" cy="26.5" rx="3" ry="1.8" fill="#ff8fab" opacity=".6"/>
+    <path d="M18.4 25 h3.2 l-1.6 2 Z" fill="#ff8fab"/><path d="M20 27 Q17.8 29.6 15.6 28 M20 27 Q22.2 29.6 24.4 28" stroke="#1b2138" stroke-width="1" fill="none" stroke-linecap="round"/>
+    <path d="M6 24 L1 23 M6 27 L1 28.5 M34 24 L39 23 M34 27 L39 28.5" stroke="#f3f5fa" stroke-width="1.1" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="ico-catc" viewBox="0 0 40 40">
+    <path d="M6 19 L8 4 L18 12 Z M34 19 L32 4 L22 12 Z" fill="#ffe5d4"/><path d="M9.5 15 L10 8.5 L14.5 12 Z M30.5 15 L30 8.5 L25.5 12 Z" fill="#ffb3c6"/>
+    <ellipse cx="20" cy="23" rx="15" ry="12.5" fill="#ffe5d4"/>
+    <circle cx="20" cy="11.5" r="2.6" fill="#ff8fab"/><circle cx="20" cy="11.5" r="1.1" fill="#ffd27a"/>
+    <ellipse cx="14.3" cy="22" rx="1.9" ry="2.3" fill="#1b2138"/><ellipse cx="25.7" cy="22" rx="1.9" ry="2.3" fill="#1b2138"/>
+    <path d="M11.6 20.6 L9.6 19 M28.4 20.6 L30.4 19" stroke="#1b2138" stroke-width="1" stroke-linecap="round"/>
+    <ellipse cx="9.5" cy="26.5" rx="3" ry="1.8" fill="#ff8fab" opacity=".7"/><ellipse cx="30.5" cy="26.5" rx="3" ry="1.8" fill="#ff8fab" opacity=".7"/>
+    <path d="M18.4 25 h3.2 l-1.6 2 Z" fill="#ff8fab"/><path d="M20 27 Q17.8 29.6 15.6 28 M20 27 Q22.2 29.6 24.4 28" stroke="#1b2138" stroke-width="1" fill="none" stroke-linecap="round"/>
+    <path d="M6 24 L1 23 M6 27 L1 28.5 M34 24 L39 23 M34 27 L39 28.5" stroke="#f3f5fa" stroke-width="1.1" stroke-linecap="round"/>
+  </symbol>
+
+  <symbol id="ico-cupcake" viewBox="0 0 40 40">
+    <path d="M9 22 L12 36 H28 L31 22 Z" fill="#aab2d6"/>
+    <path d="M16 23 L16.8 36 M20 23 V36 M24 23 L23.2 36" stroke="#8d96bd" stroke-width="1.2"/>
+    <path d="M7 22 Q7 12 20 11 Q33 12 33 22 Z" fill="#ffdde4"/>
+    <path d="M12 18 Q20 14 28 18" stroke="#ffb3c6" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <circle cx="20" cy="8.5" r="3.4" fill="#ff8fab"/>
+  </symbol>
+  <symbol id="ico-slice" viewBox="0 0 40 40">
+    <path d="M4 33 L36 33 L36 17 L4 24 Z" fill="#f3f5fa"/>
+    <path d="M4 29 L36 29" stroke="#ffdde4" stroke-width="3"/>
+    <path d="M4 24 L36 17" stroke="#ffb3c6" stroke-width="3.6" stroke-linecap="round"/>
+    <circle cx="28" cy="14.5" r="3.6" fill="#ff8fab"/><path d="M28 11 l-2 -2.5 M28 11 l2 -2.5" stroke="#8d96bd" stroke-width="1.4" stroke-linecap="round"/>
+    <path d="M3 34.5 H37" stroke="#aab2d6" stroke-width="2.2" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="ico-balloon" viewBox="0 0 40 40">
+    <path d="M20 29 Q17 33 20 38" stroke="#aab2d6" stroke-width="1.5" fill="none"/>
+    <ellipse cx="20" cy="15" rx="10" ry="12.5" fill="#ffdde4"/>
+    <path d="M17.5 27 L22.5 27 L20 30.5 Z" fill="#ffdde4"/>
+    <ellipse cx="16" cy="10" rx="2.6" ry="4" fill="#fff" opacity=".55"/>
+  </symbol>
+  <symbol id="ico-pudding" viewBox="0 0 40 40">
+    <path d="M8 18 L12 35 H28 L32 18 Z" fill="#ffe29a"/>
+    <path d="M6 18 Q6 11 20 11 Q34 11 34 18 Q31 21 28 18 Q25 22.5 22 18 Q19 22.5 16 18 Q13 21 10 18 Q8 20 6 18 Z" fill="#c98a5a"/>
+    <circle cx="20" cy="8" r="3.3" fill="#ff8fab"/>
+    <circle cx="16" cy="27" r="1.5" fill="#1b2138"/><circle cx="24" cy="27" r="1.5" fill="#1b2138"/>
+    <ellipse cx="13.5" cy="30" rx="2" ry="1.3" fill="#ff8fab" opacity=".7"/><ellipse cx="26.5" cy="30" rx="2" ry="1.3" fill="#ff8fab" opacity=".7"/>
+    <path d="M18 29.5 Q20 31.6 22 29.5" stroke="#1b2138" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="ico-star" viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7z" fill="#ffd27a"/></symbol>
+
+  <symbol id="ico-paw" viewBox="0 0 40 40"><ellipse cx="20" cy="26" rx="8.5" ry="7" fill="#ff8fab"/><circle cx="10" cy="19" r="3.6" fill="#ff8fab"/><circle cx="16.5" cy="12.5" r="3.8" fill="#ff8fab"/><circle cx="23.5" cy="12.5" r="3.8" fill="#ff8fab"/><circle cx="30" cy="19" r="3.6" fill="#ff8fab"/></symbol>
+  <symbol id="ico-fish" viewBox="0 0 40 40"><path d="M29 20 L38 12 L38 28 Z" fill="#8d96bd"/><ellipse cx="18" cy="20" rx="13" ry="8" fill="#aab2d6"/><path d="M22 12.5 Q26 8 28 10 Q27 14 24 14 Z" fill="#8d96bd"/><circle cx="10.5" cy="18" r="1.6" fill="#1b2138"/><path d="M15 14 Q17 20 15 26" stroke="#dfe4f5" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M20 15 Q22 20 20 25" stroke="#dfe4f5" stroke-width="1.6" fill="none" stroke-linecap="round"/></symbol>
+  <symbol id="ico-yarn" viewBox="0 0 40 40"><path d="M30 30 Q37 33 33 38" stroke="#ff8fab" stroke-width="2.2" fill="none" stroke-linecap="round"/><circle cx="20" cy="20" r="13" fill="#ff8fab"/><path d="M9.5 15 Q20 22 31 13 M7.5 21 Q20 28 33 20 M11 28 Q22 23 29 29" stroke="#ffdde4" stroke-width="1.6" fill="none" stroke-linecap="round"/></symbol>
+  <symbol id="ico-sparkle" viewBox="0 0 40 40"><path d="M20 3 Q22 18 37 20 Q22 22 20 37 Q18 22 3 20 Q18 18 20 3 Z" fill="#ffd27a"/></symbol>
+  <symbol id="ico-flower" viewBox="0 0 40 40"><circle cx="20" cy="10.5" r="6" fill="#ff8fab"/><circle cx="29" cy="17" r="6" fill="#ff8fab"/><circle cx="25.5" cy="28" r="6" fill="#ff8fab"/><circle cx="14.5" cy="28" r="6" fill="#ff8fab"/><circle cx="11" cy="17" r="6" fill="#ff8fab"/><circle cx="20" cy="20" r="5" fill="#ffd27a"/></symbol>
+  <symbol id="ico-gift" viewBox="0 0 40 40"><rect x="8" y="18" width="24" height="18" rx="2" fill="#aab2d6"/><rect x="6" y="13" width="28" height="7" rx="2" fill="#ffdde4"/><rect x="18" y="13" width="4" height="23" fill="#ff8fab"/><path d="M20 13 Q12 4 10 10 Q10 15 20 13 Z M20 13 Q28 4 30 10 Q30 15 20 13 Z" fill="#ff8fab"/></symbol>
+  <symbol id="ico-hibi" viewBox="0 0 40 40">
+    <g fill="#ff6b45">
+      <ellipse cx="20" cy="9.5" rx="7.5" ry="9.5"/><ellipse cx="20" cy="9.5" rx="7.5" ry="9.5" transform="rotate(72 20 20)"/>
+      <ellipse cx="20" cy="9.5" rx="7.5" ry="9.5" transform="rotate(144 20 20)"/><ellipse cx="20" cy="9.5" rx="7.5" ry="9.5" transform="rotate(216 20 20)"/>
+      <ellipse cx="20" cy="9.5" rx="7.5" ry="9.5" transform="rotate(288 20 20)"/>
+    </g>
+    <g fill="#ffa36b">
+      <ellipse cx="20" cy="12" rx="4.2" ry="6"/><ellipse cx="20" cy="12" rx="4.2" ry="6" transform="rotate(72 20 20)"/>
+      <ellipse cx="20" cy="12" rx="4.2" ry="6" transform="rotate(144 20 20)"/><ellipse cx="20" cy="12" rx="4.2" ry="6" transform="rotate(216 20 20)"/>
+      <ellipse cx="20" cy="12" rx="4.2" ry="6" transform="rotate(288 20 20)"/>
+    </g>
+    <circle cx="20" cy="20" r="3.4" fill="#c42b2b"/><path d="M20 20 L29 11" stroke="#8f1d1d" stroke-width="1.6" stroke-linecap="round"/><circle cx="29.5" cy="10.5" r="2.1" fill="#ffd44d"/>
+  </symbol>
+  <symbol id="ico-bow" viewBox="0 0 40 40">
+    <path d="M18 24 L10 37 L16 35 L19 38 Z M22 24 L30 37 L24 35 L21 38 Z" fill="#ff7096"/>
+    <path d="M20 21 L5 10 Q1 20 5 31 Z" fill="#ff8fab"/><path d="M20 21 L35 10 Q39 20 35 31 Z" fill="#ff8fab"/>
+    <path d="M20 21 L5 10 L7 20 Z" fill="#ffb3c6"/><path d="M20 21 L35 10 L33 20 Z" fill="#ffb3c6"/>
+    <rect x="16.5" y="16" width="7" height="10" rx="3" fill="#ff5c85"/>
+  </symbol>
+  <symbol id="ico-btn" viewBox="0 0 40 40">
+    <path d="M20 2 L25.5 13 L37.5 14.6 L28.8 23 L31 35.5 L20 29.6 L9 35.5 L11.2 23 L2.5 14.6 L14.5 13 Z" fill="#f1e78c" stroke="#d3c467" stroke-width="1.6" stroke-linejoin="round"/>
+    <circle cx="16.6" cy="19" r="1.8" fill="#b6a548"/><circle cx="23.4" cy="19" r="1.8" fill="#b6a548"/><circle cx="16.6" cy="25" r="1.8" fill="#b6a548"/><circle cx="23.4" cy="25" r="1.8" fill="#b6a548"/>
+  </symbol>
+  <symbol id="ico-bfly" viewBox="0 0 40 40">
+    <path d="M20 20 Q6 1 3 12 Q1 22 20 22 Z" fill="#f4a3b5"/><path d="M20 20 Q34 1 37 12 Q39 22 20 22 Z" fill="#f4a3b5"/>
+    <path d="M20 22 Q8 24 9 33 Q13 38 20 25 Z" fill="#ef8aa2"/><path d="M20 22 Q32 24 31 33 Q27 38 20 25 Z" fill="#ef8aa2"/>
+    <ellipse cx="11.5" cy="11.5" rx="4.5" ry="2.4" fill="#fff" opacity=".4" transform="rotate(-30 11.5 11.5)"/><ellipse cx="28.5" cy="11.5" rx="4.5" ry="2.4" fill="#fff" opacity=".4" transform="rotate(30 28.5 11.5)"/>
+    <path d="M20 13 V30 M20 13 Q17 8 15 7 M20 13 Q23 8 25 7" stroke="#c4566f" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="ico-gem" viewBox="0 0 40 40">
+    <g fill="#62b9e4" stroke="#3b8dbd" stroke-width="1.2">
+      <ellipse cx="20" cy="9.5" rx="6.2" ry="8"/><ellipse cx="20" cy="9.5" rx="6.2" ry="8" transform="rotate(72 20 20)"/><ellipse cx="20" cy="9.5" rx="6.2" ry="8" transform="rotate(144 20 20)"/>
+      <ellipse cx="20" cy="9.5" rx="6.2" ry="8" transform="rotate(216 20 20)"/><ellipse cx="20" cy="9.5" rx="6.2" ry="8" transform="rotate(288 20 20)"/>
+    </g>
+    <circle cx="20" cy="20" r="5.2" fill="#8fd6f4" stroke="#3b8dbd" stroke-width="1.2"/><circle cx="18" cy="18" r="1.6" fill="#fff" opacity=".8"/>
+    <ellipse cx="18" cy="6.5" rx="2" ry="3" fill="#fff" opacity=".45"/>
+  </symbol>
+  <symbol id="ico-gstar" viewBox="0 0 40 40">
+    <path d="M20 2 L25.5 14 L38 15.4 L28.6 24 L31.2 36.5 L20 30 L8.8 36.5 L11.4 24 L2 15.4 L14.5 14 Z" fill="#d1237a"/>
+    <circle cx="16" cy="14" r="1.1" fill="#ff9bd0"/><circle cx="25" cy="20" r="1" fill="#ff9bd0"/><circle cx="19" cy="25" r="1.1" fill="#ff9bd0"/><circle cx="23" cy="11" r=".9" fill="#fff"/><circle cx="14" cy="22" r=".9" fill="#fff"/>
+  </symbol>
+</defs></svg>
+
+<audio id="bgm" src="musik.mp3" loop preload="auto"></audio>
+
+<div class="splash" id="splash">
+  <div class="splash-art" aria-hidden="true">
+    <svg viewBox="0 0 300 230">
+      <g class="bob d2"><path d="M70 74 Q82 112 112 146" stroke="#aab2d6" stroke-width="1.6" fill="none"/><ellipse cx="66" cy="48" rx="22" ry="27" fill="#ffdde4"/><path d="M62 74 L70 74 L66 80 Z" fill="#ffdde4"/><ellipse cx="58" cy="38" rx="5" ry="8" fill="#fff" opacity=".45"/></g>
+      <g class="bob d3"><path d="M232 82 Q218 118 188 146" stroke="#aab2d6" stroke-width="1.6" fill="none"/><ellipse cx="236" cy="56" rx="21" ry="26" fill="#aab2d6"/><path d="M232 82 L240 82 L236 88 Z" fill="#aab2d6"/><ellipse cx="228" cy="46" rx="5" ry="8" fill="#fff" opacity=".4"/></g>
+      <g class="bob"><use href="#catm" x="94" y="92" width="112" height="112"/></g>
+    </svg>
+  </div>
+  <div class="bd bd-top" aria-hidden="true"></div>
+  <div class="bd bd-bot" aria-hidden="true"></div>
+  <div class="splash-inner">
+    <div class="splash-head">
+      <small>spesial dari Adel, untuk <span class="js-nama">Nama</span></small>
+      <h1>happy<br><em>22nd birthday,</em><br>Hanif!</h1>
+    </div>
+    <div class="ttt-box">
+      <p class="ttt-rule">menangin tic tac toe-nya dulu yaa, baru boleh masuk</p>
+      <div class="ttt" id="ttt" role="group" aria-label="Papan tic tac toe">
+        <button class="ttt-cell" type="button" aria-label="Kotak 1"></button>
+        <button class="ttt-cell" type="button" aria-label="Kotak 2"></button>
+        <button class="ttt-cell" type="button" aria-label="Kotak 3"></button>
+        <button class="ttt-cell" type="button" aria-label="Kotak 4"></button>
+        <button class="ttt-cell" type="button" aria-label="Kotak 5"></button>
+        <button class="ttt-cell" type="button" aria-label="Kotak 6"></button>
+        <button class="ttt-cell" type="button" aria-label="Kotak 7"></button>
+        <button class="ttt-cell" type="button" aria-label="Kotak 8"></button>
+        <button class="ttt-cell" type="button" aria-label="Kotak 9"></button>
+      </div>
+      <p class="ttt-status" id="tttStatus" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+
+<div class="bd bd-top" aria-hidden="true"></div>
+
+<main>
+  <header class="hero">
+   <h1><span class="l1">Happy Sweet 22nd Birthday,</span><span class="l2">Ahmad Khanif Fudin!</span></h1>
+   <p class="tagline">a collection of memories, moments, and words I've been meaning to say...</p>
+  </header>
+
+  <section>
+  <div class="sec-head"><span class="sec-no">01</span><h2>the opening</h2></div>
+  <div class="sub"><h3>a gift for your 22nd birthday</h3></div>
+    <div class="cake-wrap">
+      <button class="cake" type="button" aria-label="Tiup lilin ulang tahun">
+        <svg viewBox="0 0 160 150" aria-hidden="true">
+          <ellipse cx="80" cy="141" rx="66" ry="7" fill="#000" opacity=".2"/>
+          <rect x="22" y="92" width="116" height="44" rx="10" fill="#ffdde4"/>
+          <rect x="34" y="58" width="92" height="40" rx="10" fill="#f3f5fa"/>
+          <path d="M34 68 Q34 58 44 58 L116 58 Q126 58 126 68 L126 72 q-6 12 -12 0 q-6 14 -12 0 q-6 10 -12 0 q-6 14 -12 0 q-6 10 -12 0 q-6 12 -12 0 q-6 14 -12 0 Z" fill="#ffdde4"/>
+          <rect x="40" y="108" width="6" height="3" rx="1.5" fill="#aab2d6" transform="rotate(-20 43 109)"/><rect x="62" y="118" width="6" height="3" rx="1.5" fill="#f3f5fa" transform="rotate(25 65 119)"/>
+          <rect x="88" y="110" width="6" height="3" rx="1.5" fill="#aab2d6" transform="rotate(15 91 111)"/><rect x="110" y="120" width="6" height="3" rx="1.5" fill="#f3f5fa" transform="rotate(-30 113 121)"/>
+          <rect x="75" y="30" width="10" height="30" rx="3" fill="#aab2d6"/>
+          <path d="M75 38 L85 34 M75 46 L85 42 M75 54 L85 50" stroke="#f3f5fa" stroke-width="2.2"/>
+          <path class="smoke" d="M80 26 q-5 -6 0 -12 q5 -6 0 -12" stroke="#aab2d6" fill="none" stroke-width="2.5" stroke-linecap="round"/>
+          <g class="flame"><path d="M80 8 C72 19 73 28 80 30 C87 28 88 19 80 8 Z" fill="#ffd27a"/><path d="M80 17 C77 22 78 27 80 28 C82 27 83 22 80 17 Z" fill="#fff3c9"/></g>
+        </svg>
+      </button>
+      <p class="cake-hint">ketuk lilinnya, terus make a wish</p>
+    </div>
+    <p>happy 22nd birthday, Hanif!</p>
+    <p>semoga di usia kamu yang ke-22 ini, kamu selalu diberikan kesehatan, umur yang berkah, rezeki yang lancar, dan hati yang selalu dikuatkan dalam menjalani apa pun yang sedang kamu usahakan. semoga semua hal baik yang sedang kamu perjuangkan satu per satu bisa tercapai, termasuk rencana kamu buat melanjutkan pendidikan S1. semoga perjalanan kamu selalu dimudahkan oleh Allah, urusanmu dilancarkan, dan kamu selalu diberikan kesempatan untuk terus berkembang menjadi versi terbaik dari dirimu sendiri.</p>
+    <div class="orn" aria-hidden="true"></div>
+    <p>buat kamu yang sekarang lagi berjuang di perantauan, jangan lupa jaga kesehatan, jaga diri baik-baik, jangan terlalu keras sama diri sendiri, dan jangan lupa pulang sesekali. sejauh apa pun kamu pergi dan sesibuk apa pun kamu bekerja, semoga kamu nggak pernah kehilangan arah dan selalu ingat rumah dan orang-orang yang selalu mendoakan kamu, termasuk aku. kamu udah keren banget, aku bener-bener bangga sama kamu. aku selalu kagum sama kamu, cara kamu memandang dan merencanakan masa depan, meanwhile aku masih bingung sama masa depan aku. kamu selalu dan akan selalu jadi sosok yang aku kagumi, Hanif.</p>
+    <p>jangan pernah ninggalin sholat ya, Hanif. sesibuk apa pun pekerjaanmu, sesulit apa pun keadaanmu, semoga kamu selalu punya waktu dan keinginan untuk mendekatkan diri sama Allah. kamu harus belajar jadi laki-laki yang punya prinsip dan tanggung jawab, nggak mudah ikut-ikutan orang lain.</p>
+    <div class="orn" aria-hidden="true"></div>
+    <p>semoga semakin bertambah usia, kamu semakin dewasa dalam memahami perasaan orang lain. kalau suatu hari nanti ada perempuan lain setelah aku yang datang dan menyayangimu dengan tulus, please treat her gently. jangan hadir hanya ketika kamu sedang ingin ditemani, jangan memberikan harapan kalo emang nggak punya niat untuk memperjuangkannya, dan jangan membuat seseorang merasa begitu berarti hari ini, lalu mempertanyakan keberadaannya sendiri keesokan harinya... </p>
+    <p>aku nggak tau kamu pernah sadar nggak, gimana semua ini terasa dari sisi aku. mungkin kamu nggak pernah bermaksud nyakitin aku, tapi tetep ada hal-hal yang meninggalkan luka dan butuh waktu untuk bisa aku terima. aku harap kamu bisa belajar dari apa pun yang pernah terjadi di antara kita, sebagaimana aku juga sedang belajar banyak hal dari pertemuan ini.</p>
+    <p>makasih yaa udah pernah jadi bagian dari momen-momen indah yang akan selalu aku inget. meskipun mungkin nantinya kita berjalan ke arah yang berbeda, aku tetep berharap kehidupan mempertemukanmu dengan banyak hal baik dan orang-orang yang baik.</p>
+     <p style="text-align:center; font-style:italic">once again, happy birthday, Hanif. semoga Allah selalu menjaga langkahmu, melapangkan dan memberkahi rezekimu, memudahkan perjalananmu, dan menjadikan kamu laki-laki yang semakin baik dari hari ke hari. take care of yourself, wherever life takes you.</p>
+    <p>I know this might not be the kind of birthday gift you expected, but I wanted to give you something a little more personal this time.</p>
+    <p>something made of memories, little details, and words that I've been keeping to myself.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-no">02</span><h2>a birthday celebration</h2></div>
+    <div class="sub"><h3>Kagura for Khanif</h3></div>
+    <p>your name starts with K, so I decided to celebrate your 22nd birthday by playing Kagura on your birthday.</p>
+    <div class="mv-photo">
+      <a href="foto/kagura.jpg" target="_blank"><img src="foto/Kaguuuur.jpg" alt=""></a>
+      <span class="stk" style="width:40px;height:40px;top:-16px;right:-12px" aria-hidden="true"><svg viewBox="0 0 40 40" aria-hidden="true"><use href="#ico-star"/></svg></span>
+      <span class="stk" style="width:38px;height:38px;bottom:-14px;left:-12px;animation-delay:-1.6s" aria-hidden="true"><svg viewBox="0 0 40 40" aria-hidden="true"><use href="#ico-gift"/></svg></span>
+    </div>
+    <div class="stars" aria-hidden="true"><svg class="star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7z"/></svg><svg class="star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7z"/></svg><svg class="star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7z"/></svg><svg class="star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7z"/></svg><svg class="star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7z"/></svg></div>
+    <p style="text-align:center; font-style:italic">five ranked matches · one birthday dedication · played with you on my mind</p>
+  </section>
+
+  <section class="pola">
+    <div class="sec-head"><span class="sec-no">03</span><h2>archives of us, you and I</h2></div>
+    <div class="sub"><h3>some moments I'll always remember</h3></div>
+    <div class="sub">
+      <h3>A. where it all began</h3>
+      <div class="grid">
+        <div class="ph" data-label="our first couple doll keychains at our first meeting"><img src="foto/Danau.jpg" alt="" onerror="this.remove()"></div>
+        <div class="ph" data-label="our first meal at our first meeting"><img src="foto/Sei.jpg" alt="" onerror="this.remove()"></div>
+      </div>
+      <p class="cap">who would've thought that a random night would become one of the memories I'd keep coming back to?</p>
+      <span class="date">16.10.2026</span>
+    </div>
+
+    <div class="sub">
+      <h3>B. somewhere along the way</h3>
+      <div class="grid">
+        <div class="ph" data-label="was it a library date?"><img src="foto/Perpus.jpg" alt="" onerror="this.remove()"></div>
+      </div>
+      <p class="cap">I guess happiness can be as simple as being there, sharing every moment, and going nowhere without you.</p>
+      <span class="date">19.10.2026</span>
+    </div>
+
+    <div class="sub">
+      <h3>C. until we had to part ways</h3>
+      <div class="grid">
+        <div class="ph" data-label="Judy and Nick"><img src="foto/Bandara.jpg" alt="" onerror="this.remove()"></div>
+      </div>
+      <p class="cap">I remember that day. I didn't know when we'd meet again, but I knew I was going to miss having you around.</p>
+      <span class="date">24.10.2026</span>
+    </div>
+  </section>
+
+  <section class="pola">
+    <div class="sec-head"><span class="sec-no">04</span><h2>the nights in the land of dawn</h2></div>
+    <div class="sub"><h3>my favorite memory is simply having you as my teammate</h3></div>
+    <div class="grid stack">
+      <div class="ph" data-label="Angela Sky Piercer, 07.10.2026"><img src="foto/Angela.jpg" alt="" onerror="this.remove()"></div>
+      <div class="ph" data-label="Kagura with Khanif, 30.10.2026"><img src="foto/Kagura 2.jpg" alt="" onerror="this.remove()"></div>
+      <div class="ph" data-label="Kagura with Khanif 2, 30.10.2026"><img src="foto/Kagura.jpg" alt="" onerror="this.remove()"></div>
+      <div class="ph" data-label="Kagura with Khanif 3, 30.10.2026"><img src="foto/Kagura 3.jpg" alt="" onerror="this.remove()"></div>
+      <div class="ph" data-label="Lancelot &amp; Odette, 04.10.2026"><img src="foto/Lancedette.jpg" alt="" onerror="this.remove()"></div>
+      <div class="ph" data-label="Rafaela Hanabi, 11.10.2026"><img src="foto/Rafaela.jpg" alt="" onerror="this.remove()"></div>
+      <div class="ph" data-label="Gusion, 08.11.2026"><img src="foto/Gusion.jpg" alt="" onerror="this.remove()"></div>
+      <div class="ph" data-label="Lobby, 08.11.2026"><img src="foto/Lobby.jpg" alt="" onerror="this.remove()"></div>
+    </div>
+    <div class="duo" aria-hidden="true">
+      <div class="duo-c"><span class="bubble">main yuk!</span><svg class="chr" viewBox="0 0 120 120"><use href="#catm" width="120" height="120"/></svg></div>
+      <div class="duo-c"><span class="bubble">gas!</span><svg class="chr" viewBox="0 0 120 120"><use href="#catf" width="120" height="120"/></svg></div>
+    </div>
+    <p class="cap" style="margin-top:18px">every night I spent with you became a night I'd always find myself longing for...</p>
+    <p style="margin-top:18px">kalo diingat-ingat lagi, aku tuh suka dan bahagia banget setiap kali kita main bareng. mau brawl, classic, ranked, mro, mau menang atau kalah, semuanya tetep terasa menyenangkan buat aku, as long as I'm with you. nggak peduli sama hasil akhirnya, karena yang bikin semuanya terasa seru, indah, bahagia, dan menyenangkan ya karena aku mainnya sama kamu. lucu ya, ternyata sesederhana main ML bareng kamu bisa jadi salah satu hal yang paling aku rindukan sekarang :'D</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-no">05</span><h2>before you read this</h2></div>
+    <svg class="env" viewBox="0 0 80 62" aria-hidden="true"><rect x="4" y="10" width="72" height="46" rx="6" fill="#ffdde4"/><path d="M4 16 L40 40 L76 16" stroke="#ff8fab" stroke-width="3" fill="none" stroke-linejoin="round"/><circle cx="40" cy="40" r="7" fill="#ff8fab"/><path d="M40 44 l-3.5 -3.6 a2.2 2.2 0 0 1 3.5 -2.6 a2.2 2.2 0 0 1 3.5 2.6 Z" fill="#ffdde4"/></svg>
+    <div class="letter">
+      <h3>there's something I've been meaning to tell you...</h3>
+      <p>mungkin ini bagian yang selalu berusaha aku susun kata-katanya.</p>
+      <p>jujur, aku juga nggak tau harus mulai dari mana, tapi kayaknya ada beberapa hal yang emang perlu aku sampaikan baik-baik daripada terus-terusan aku pendam dan nggak pernah tersampaikan.</p>
+      <p>aku nggak nulis ini dengan maksud buat ngubah pikiranmu tentang apa pun, apalagi berharap sesuatu sebagai balasannya. aku cuma pengen kamu ngerti, tau, dan paham, sebesar apa arti semua ini buat aku.</p>
+    </div>
+  </section>
+
+  <section id="letterSec" class="sealed" style="border-bottom:0">
+    <div class="sec-head"><span class="sec-no">06</span><h2>the letter</h2></div>
+    <div class="envbox">
+      <button class="envelope" type="button" aria-label="Buka amplop">
+        <span class="env-back"></span>
+        <span class="env-paper"></span>
+        <span class="env-front"></span>
+        <span class="env-flap"></span>
+        <span class="env-seal">&#9825;</span>
+      </button>
+      <p class="env-hint">ketuk amplopnya buat buka</p>
+    </div>
+    <div class="letter-body">
+    <div class="sub"><h3>things I never quite knew how to say</h3></div>
+    <p>aku ngerasa selama ini aku yang terlalu sering berusaha memahami perasaan dan keadaan orang lain, sampe kadang aku lupa kalo perasaanku sendiri juga perlu dipahami. dan ternyata, aku ngelakuin hal yang sama ke kamu...</p>
+    <p>aku tau kamu pernah punya inisiatif. kamu pernah ngehubungi aku duluan, reach out duluan, inisiatif duluan, chat duluan ngajak telepon, ngirim video, nemenin nonton, nemenin ke perpus, rela nggak tidur, ngeluangin waktu, jauh-jauh samperin aku, dan hal-hal kecil yang mungkin buat kamu biasa aja, tapi gede buat aku. aku nggak pernah nganggap semua itu nggak ada. justru karena aku pernah ngerasain kedekatan itu, aku jadi punya harapan lebih terhadap kita.</p>
+    <p>tapi, sejak kita LDR tuh, aku ngarasa kamu udah beda... kirain kalo LDR tuh harusnya komunikasinya makin intens ya karena kehalang jarak, apalagi jarak kita jauh banget sampe beda pulau, tapi ternyata nggak berlaku ya buat kita. mungkin aku sendiri yang nyimpen harapan. inisiatif yang dulu ada, sekarang semakin jarang, aku juga lebih sering ngerasa jadi satu-satunya orang yang berusaha ngejaga kedekatan ini sendirian. aku sempet mikir, mungkin ini cuma fase yang harus kita lewati. mungkin kamu emang sibuk, mungkin keadaan sedang nggak memungkinkan, atau mungkin emang ada hal-hal yang belum bisa aku pahami. tapi aku di sini juga sibuk tau, aku di sini juga bergelut dengan skripsi aku, kita sama-sama bergelut dengan masa depan. but, still, aku masih pengen ngejalaninnya sama kamu, ngelibatin kamu dalam prosesnya, selalu sama kamu, dan mungkin aku sendirian ya yang ngerasain itu...</p>
+    <p>aku udah cukup sering ngejelasin apa yang aku rasain dan ngeyakinin kamu kalo cuma ada kamu, cuma kamu yang aku pengen, nggak ada cowok lain. aku pengen banget kamu ngerti kalo perasaanku ke kamu tuh sungguh-sungguh dan aku nggak sedang mempermainkan keadaan ini. tapi setelah semua penjelasan dan keyakinan yang aku berikan, ternyata keadaan kita tetap nggak banyak berubah. indeed, kamu kayaknya malah makin ngejauh, dan aku semakin ngerasa nggak dianggep...</p>
+    <p>bahkan untuk hal-hal sederhana seperti menghabiskan waktu bersama, aku ajak kamu main brawl nggak mau, tapi kamu main sama orang lain. mungkin buat kamu itu bukan hal besar, tapi lagi-lagi aku kecewa. kecewa dengan ekspektasi yang nggak seharusnya aku punya lagi. aku bertanya-tanya, kenapa sih hal sesederhana itu aku justru nggak dapet kesempatan yang sama? padahal aku cuma minta brawl, bukan classic, apalagi rank. ah, mungkin emang aku bukan orang yang kamu mau ya...</p>
+    <p>aku tuh nggak pernah minta kamu buat selalu ada setiap saat loh, Hanif. aku cuma pengen ngerasa bahwa kehadiranku juga kamu inginkan. aku pengen sesekali dicari, diajak, diusahakan, dan nggak selalu menjadi orang yang harus memulai semuanya lebih dulu. emang nggak tau diri banget ya aku? bukan siapa-siapa kok ngarep kayak gitu. too much banget ya aku? indeed... :'D</p>
+    <p>aku juga nggak lupa kok kalo kamu pernah ngomong kalo kamu nggak pengen menjalin hubungan sama aku. aku udah berusaha nerima itu, meskipun ada beberapa hal dari kedekatan kita yang membuatku kembali berharap. mungkin aku terlalu mudah mengartikan perhatian sebagai kemungkinan, mungkin aku juga terlalu ingin percaya bahwa suatu hari keadaan bisa berubah.</p>
+    <p>sampe sekarang pun, aku masih punya bagian dari diri aku yang berharap kita bisa berhasil melewati ini. aku masih pengen banget percaya bahwa mungkin suatu hari kita bisa kembali dekat seperti dulu. tapi aku tuh juga sadar... harapan itu nggak bisaaa selalu aku jadiin alasan buat bertahan dalam keadaan yang bahkan belum tentu kamu inginkan dengan cara yang sama, sebagaimana aku inginkaaannnn. aku nggak bisa maksa kamu untuk menginginkan hubungan yang sama denganku, aku juga nggak bisa terus-terusan ngeyakinin kamu tentang perasaanku, berharap suatu saat semua itu akan mengubah sesuatu dalam dirimu.</p>
+    <p>aku tuh pernah benar-benar pengen kalo itu kamu, Hanif. kalo kamu orangnya. aku pernah mikir, mungkin kamu adalah orang terakhir yang layak buat aku perjuangin. maybe you're the last person I'll ever find worth fighting for. dan bukan berarti sekarang semua perasaan itu ilang gitu aja. aku masih sayang, masih bisa luluh setiap kali kamu datang lagi, dan mungkin itu alasannya kenapa semuanya rasanya sulit banget buat aku...</p>
+    <p>barangkali, salah satu hal yang bikin aku sesulit ini buat ngelepas kamu tuh karena kalo sama kamu, aku pernah bener-bener ngerasa hidup. ada banyak hal sederhana yang terasa menyenangkan hanya karena ada kamu di dalamnya. mungkin aku bukan cuma sedang berusaha ngelepasin seseorang yang aku sayang, tapi juga sedang belajar merelakan perasaan bahagia yang pernah aku temukan kalo sama kamu...</p>
+    <p>tapi aku mulai paham kalo aku kayaknya perlu berhenti mengabaikan apa yang aku rasain sendiri deh, aku nggak pengen terus-terusan berada dalam kedekatan yang bikin aku bahagia sesaat ketika kamu datang, lalu kembali mempertanyakan semuanya ketika kamu menjauh... capek banget jujur, emotionally draining banget. mikirin kamu setiap hari sambil nangis di mana pun, di perpus, di atas motor, di atas sajadah, tuh capeeek banget buat aku, hehe</p>
+    <p>aku juga nggak nganggep semua yang pernah terjadi di antara kita tuh sesuatu yang sia-sia kok, apalagi benci sama kamu. nggak ada sekali pun aku mikir kayak gitu. aku cuma kecewa aja karena ternyata sesuatu yang aku harapkan banget nggak bisa berjalan seperti yang aku bayangkan... ya emang sih dari awal kamu yang udah kasih spoiler alert, aku yang tetep ngeyel wkwk :'D</p>
+    <p>kalo emang kita cuma bisa jadi temen, mungkin aku perlu belajar nempatin diriku di posisi itu, meskipun aku ngerti perasaanku belum sepenuhnya sampe ke sana. aku nggak tauu bakal gimana keadaan kita ke depannya, tapi untuk sekarang, aku nggak pengen lagi maksain sesuatu yang cuma diharapkan sepihak doang, yaitu akulah sepihak itu heheh...</p>
+      <p class="sign">I think this is where I have to stop holding on. not because everything I felt for you suddenly disappeared, but because I've finally understood that I can't keep waiting for something that you never promised me...</p>
+    <p>aku udah nggak pengen mencari-cari makna dari setiap kedatanganmu, menebak-nebak perasaanmu, atau berharap suatu hari kamu akan menginginkan hal yang sama kayak aku, kayak keinginan aku. aku udah cukup lama nyimpen harapan itu...</p>
+    <p>you were someone I once genuinely wanted to stay with and imagined having a future with. and perhaps that's why letting this go isn't easy. VERY NOT EASYYYYY, it's very hardddddd and so hard. but I'm choosing to accept that wanting you and being wanted by you in the same way are TWO VERY DIFFERENT THINGS.</p>
+    <p>jadi, makasih yaa udah pernah jadi bagian dari hidup aku. aku akan menyimpan hal-hal baik yang pernah ada tanpa harus terus tinggal di dalam kenangannya :)</p>
+      <p class="sign">I hope life treats you kindly, Hanif. I hope you find everything you're looking for, and I hope I do too.</p>
+    <p>dan mungkin, ini bakal jadi terakhir kalinya aku berusaha menjangkau kamu dengan cara kayak gini. bukan karena aku udah nggak peduli atau tiba-tiba berhenti punya perasaan ke kamu, tapi karena kayaknya aku udah menyampaikan semua hal yang selama ini pengen aku sampaikan. aku udah berusaha sebisaku buat bikin kamu ngerti seberapa berarti kamu buat aku dan seberapa sungguh-sungguhnya perasaanku selama ini. setelah ini, aku mau belajar membiarkan semuanya berjalan sebagaimana mestinya. aku nggak mau lagi terus-terusan berusaha mempertahankan kedekatan yang ternyata nggak bisa aku jaga sendirian. mungkin udah saatnya sekarang aku mundur sedikit, berhenti mengusahakan semuanya, dan membiarkan kita masing-masing menjalani kehidupan tanpa harus terus membawa harapan yang sama.</p>
+       <p class="sign">this is me letting go. not out of anger, not out of resentment, but because I owe myself the peace I've been trying so hard to find...</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-no">07</span><h2>a little more of us</h2></div>
+    <div class="sub"><h3>the memories I couldn't leave out</h3></div>
+    <p class="note" style="text-align:center">maaf ya alay, I really need to put these memories here</p>
+    <div class="album-ctl">
+      <button class="shuf" type="button" data-act="open">buka semua</button>
+      <button class="shuf" type="button" data-act="mess">acak lagi ✦</button>
+      <p class="album-count"><span id="openedN">0</span> / <span id="totalN">50</span> foto terbuka · gosok fotonya ya buat ngintip</p>
+    </div>
+    <div class="album">
+      <button class="al" type="button" data-full="foto/01.jpg" aria-label="Foto 1"><img src="foto/01.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/02.jpg" aria-label="Foto 2"><img src="foto/02.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/03.jpg" aria-label="Foto 3"><img src="foto/03.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/04.jpg" aria-label="Foto 4"><img src="foto/04.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/05.jpg" aria-label="Foto 5"><img src="foto/05.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/06.jpg" aria-label="Foto 6"><img src="foto/06.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/07.jpg" aria-label="Foto 7"><img src="foto/07.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/08.jpg" aria-label="Foto 8"><img src="foto/08.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/09.jpg" aria-label="Foto 9"><img src="foto/09.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/10.jpg" aria-label="Foto 10"><img src="foto/10.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/11.jpg" aria-label="Foto 11"><img src="foto/11.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/12.jpg" aria-label="Foto 12"><img src="foto/12.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/13.jpg" aria-label="Foto 13"><img src="foto/13.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/14.jpg" aria-label="Foto 14"><img src="foto/14.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/15.jpg" aria-label="Foto 15"><img src="foto/15.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/16.jpg" aria-label="Foto 16"><img src="foto/16.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/17.jpg" aria-label="Foto 17"><img src="foto/17.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/18.jpg" aria-label="Foto 18"><img src="foto/18.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/19.jpg" aria-label="Foto 19"><img src="foto/19.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/20.jpg" aria-label="Foto 20"><img src="foto/20.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/21.jpg" aria-label="Foto 21"><img src="foto/21.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/22.jpg" aria-label="Foto 22"><img src="foto/22.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/23.jpg" aria-label="Foto 23"><img src="foto/23.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/24.jpg" aria-label="Foto 24"><img src="foto/24.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/25.jpg" aria-label="Foto 25"><img src="foto/25.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/26.jpg" aria-label="Foto 26"><img src="foto/26.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/27.jpg" aria-label="Foto 27"><img src="foto/27.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/28.jpg" aria-label="Foto 28"><img src="foto/28.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/29.jpg" aria-label="Foto 29"><img src="foto/29.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/30.jpg" aria-label="Foto 30"><img src="foto/30.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/31.jpg" aria-label="Foto 31"><img src="foto/31.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/32.jpg" aria-label="Foto 32"><img src="foto/32.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/33.jpg" aria-label="Foto 33"><img src="foto/33.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/34.jpg" aria-label="Foto 34"><img src="foto/34.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/35.jpg" aria-label="Foto 35"><img src="foto/35.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/36.jpg" aria-label="Foto 36"><img src="foto/36.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/37.jpg" aria-label="Foto 37"><img src="foto/37.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/38.jpg" aria-label="Foto 38"><img src="foto/38.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/39.jpg" aria-label="Foto 39"><img src="foto/39.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/40.jpg" aria-label="Foto 40"><img src="foto/40.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/41.jpg" aria-label="Foto 41"><img src="foto/41.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/42.jpg" aria-label="Foto 42"><img src="foto/42.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/43.jpg" aria-label="Foto 43"><img src="foto/43.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/44.jpg" aria-label="Foto 44"><img src="foto/44.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/45.jpg" aria-label="Foto 45"><img src="foto/45.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/46.jpg" aria-label="Foto 46"><img src="foto/46.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/47.jpg" aria-label="Foto 47"><img src="foto/47.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/48.jpg" aria-label="Foto 48"><img src="foto/48.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/49.jpg" aria-label="Foto 49"><img src="foto/49.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+      <button class="al" type="button" data-full="foto/50.jpg" aria-label="Foto 50"><img src="foto/50.jpg" width="360" height="360" loading="lazy" alt="" onerror="this.parentNode.remove()"></button>
+    </div>
+  </section>
+
+  <section id="songsSec">
+    <div class="sec-head"><span class="sec-no">08</span><h2>songs for Hanif</h2></div>
+    <div class="sub"><h3>lagu-lagu yang ngingetin aku sama kamu</h3></div>
+    <div class="songs" id="songList"></div>
+  </section>
+</main>
+
+<footer>Surabaya, Nopember 2026</footer>
+<div class="bd bd-bot" aria-hidden="true"></div>
+
+<button class="music" id="musicBtn" type="button" aria-label="Putar atau jeda musik">jeda musik</button>
+<div class="lightbox" id="lightbox" role="dialog" aria-label="Foto"><img alt=""><div class="lb-ui"><button type="button" data-lb="close" aria-label="Tutup">&#10005;</button><button type="button" data-lb="prev" aria-label="Sebelumnya">&#8249;</button><span class="lb-count"></span><button type="button" data-lb="next" aria-label="Berikutnya">&#8250;</button></div></div>
+
+<script src="script.js"></script>
+</body>
+</html>
