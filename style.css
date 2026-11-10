@@ -554,20 +554,30 @@ body.splash-on #snow, body.splash-on #bubbles { z-index: 49; }
 /* ---------- halaman 08: lagu ---------- */
 .songs { display: flex; flex-direction: column; gap: 26px; text-align: left; }
 .sbox { border: 1px solid rgba(255, 221, 228, .3); border-radius: 14px; background: rgba(255, 221, 228, .07); padding: 10px 12px; transition: border-color .2s, background .2s; }
-/* kotak lagu yang SEDANG DIPUTAR (kelas .on): pink pekat tidak transparan, glow berdenyut di tepi,
-   kilap yang menyapu dari kiri ke kanan, dan sparkle berkelip di pinggir kotak. Lagu yang dijeda / tidak main tetap polos. */
+/* kotak lagu yang SEDANG DIPUTAR (kelas .on): pink pekat tidak transparan dan bergerak terus:
+   gradien mengalir, kilap menyapu, glow berdenyut, kotak berdenyut + goyang pelan, sparkle berkelip dan bernapas,
+   cover album joget, equalizer di samping judul, not musik dan hati melayang naik, kucing di bar ikut loncat.
+   Lagu yang dijeda / tidak main tetap polos. */
 .song.on .sbox {
   --spk-w: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M7 0Q7.9 6.1 14 7Q7.9 7.9 7 14Q6.1 7.9 0 7Q6.1 6.1 7 0Z' fill='%23ffffff'/%3E%3C/svg%3E");
   --spk-g: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M7 0Q7.9 6.1 14 7Q7.9 7.9 7 14Q6.1 7.9 0 7Q6.1 6.1 7 0Z' fill='%23ffeeb0'/%3E%3C/svg%3E");
   position: relative;
   border-color: rgba(255, 232, 240, .95);
   background:
-    linear-gradient(110deg, transparent 38%, rgba(255, 255, 255, .32) 50%, transparent 62%) 100% 0 / 260% 100% no-repeat,
-    linear-gradient(135deg, #cf4a78 0%, #b83f85 55%, #8f449c 100%);
+    linear-gradient(110deg, transparent 38%, rgba(255, 255, 255, .34) 50%, transparent 62%) 100% 0 / 260% 100% no-repeat,
+    linear-gradient(100deg, #d24c78 0%, #b83f85 25%, #9345a3 50%, #b83f85 75%, #d24c78 100%) 0 0 / 200% 100% repeat-x;
   box-shadow: 0 0 0 1px rgba(255, 255, 255, .35), 0 0 16px rgba(255, 143, 171, .65), 0 8px 22px rgba(0, 0, 0, .35);
-  animation: sboxshine 3.8s ease-in-out infinite, sboxglow 2.4s ease-in-out infinite alternate;
+  animation: sboxfx 4.2s linear infinite, sboxglow 2.4s ease-in-out infinite alternate,
+             sboxbeat .9s ease-in-out infinite alternate, sboxsway 2.6s ease-in-out infinite alternate;
 }
-@keyframes sboxshine { 0%, 30% { background-position: 100% 0, 0 0; } 100% { background-position: 0% 0, 0 0; } }
+/* satu keyframes untuk dua lapis latar: lapis 1 = kilap yang menyapu (lalu jeda), lapis 2 = gradien yang terus mengalir (mulus karena bergeser tepat satu periode) */
+@keyframes sboxfx {
+  0%   { background-position: 100% 0, 0% 0; }
+  30%  { background-position: 100% 0, -60% 0; }
+  100% { background-position: 0% 0, -200% 0; }
+}
+@keyframes sboxbeat { from { scale: 1; } to { scale: 1.014; } }
+@keyframes sboxsway { from { rotate: -.3deg; } to { rotate: .3deg; } }
 @keyframes sboxglow {
   from { box-shadow: 0 0 0 1px rgba(255, 255, 255, .22), 0 0 10px rgba(255, 143, 171, .45), 0 8px 22px rgba(0, 0, 0, .35); }
   to   { box-shadow: 0 0 0 1px rgba(255, 255, 255, .55), 0 0 24px rgba(255, 143, 171, .9), 0 8px 22px rgba(0, 0, 0, .35); }
@@ -580,15 +590,73 @@ body.splash-on #snow, body.splash-on #bubbles { z-index: 49; }
   background-image: var(--spk-w), var(--spk-w), var(--spk-w), var(--spk-w), var(--spk-w);
   background-size: 12px 12px, 16px 16px, 10px 10px, 14px 14px, 10px 10px;
   background-position: 9% 0, 46% 0, 100% 18%, 70% 100%, 0 62%;
-  animation: spk 2.6s ease-in-out infinite;
+  animation: spk 2.6s ease-in-out infinite, spkpulse 2.1s ease-in-out infinite alternate;
 }
 .song.on .sbox::after {
   background-image: var(--spk-g), var(--spk-g), var(--spk-g), var(--spk-g), var(--spk-g);
   background-size: 14px 14px, 10px 10px, 16px 16px, 10px 10px, 12px 12px;
   background-position: 28% 100%, 78% 0, 100% 70%, 0 20%, 56% 100%;
-  animation: spk 3.3s ease-in-out -1.2s infinite;
+  animation: spk 3.3s ease-in-out -1.2s infinite, spkpulse 2.7s ease-in-out -.8s infinite alternate;
 }
 @keyframes spk { 0%, 100% { opacity: .08; } 50% { opacity: 1; } }
+@keyframes spkpulse { from { scale: .97; } to { scale: 1.05; } }
+
+/* cover album joget, not musik dan hati melayang dari cover, equalizer di samping judul, kucing di bar loncat-loncat */
+.song.on .sart { position: relative; animation: sartdance 1.1s ease-in-out infinite alternate; }
+@keyframes sartdance {
+  from { rotate: -7deg; translate: 0 1px; scale: 1; }
+  to   { rotate: 7deg; translate: 0 -3px; scale: 1.07; }
+}
+.song.on .sart::before, .song.on .sart::after, .song.on .stx::after {
+  position: absolute; pointer-events: none; font-size: 18px; line-height: 1; opacity: 0;
+  text-shadow: 0 0 6px rgba(255, 255, 255, .85);
+}
+.song.on .sart::before { content: "\266A"; left: 38%; top: -4px; color: #fff; animation: noteup 2.6s ease-out infinite; }
+.song.on .sart::after { content: "\2665"; left: 72%; top: -2px; color: #ffd1e0; animation: noteup 3.2s ease-out -1.4s infinite; }
+.song.on .stx { position: relative; }
+.song.on .stx::after { content: "\266B"; right: 4px; top: -6px; color: #fff3b8; animation: noteup 3.6s ease-out -.6s infinite; }
+@keyframes noteup {
+  0%   { opacity: 0; transform: translate(-50%, 8px) scale(.6) rotate(0deg); }
+  15%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(calc(-50% + 14px), -36px) scale(1.15) rotate(18deg); }
+}
+.song.on .stt::after {
+  content: ""; display: inline-block; width: 18px; height: 15px; margin-left: 9px; vertical-align: -1px;
+  background:
+    linear-gradient(#fff, #fff) 0 100% / 3px 40% no-repeat,
+    linear-gradient(#ffd27a, #ffd27a) 5px 100% / 3px 85% no-repeat,
+    linear-gradient(#9fc9f2, #9fc9f2) 10px 100% / 3px 60% no-repeat,
+    linear-gradient(#ffb3c6, #ffb3c6) 15px 100% / 3px 30% no-repeat;
+  animation: eqbars .9s ease-in-out infinite alternate;
+}
+@keyframes eqbars {
+  0%   { background-size: 3px 40%, 3px 85%, 3px 60%, 3px 30%; }
+  33%  { background-size: 3px 90%, 3px 35%, 3px 95%, 3px 70%; }
+  66%  { background-size: 3px 55%, 3px 100%, 3px 40%, 3px 90%; }
+  100% { background-size: 3px 100%, 3px 50%, 3px 75%, 3px 45%; }
+}
+.song.on .scat svg { animation: catbob .5s ease-in-out infinite alternate; }
+/* ikan di ujung bar berenang: badan goyang, meliuk maju-mundur, dan gelembung naik */
+.song.on .sfish { position: relative; animation: fishswim 1.6s ease-in-out infinite alternate; }
+.song.on .sfish svg { animation: fishwag .38s ease-in-out infinite alternate; transform-origin: 85% 50%; }
+@keyframes fishswim {
+  0%   { translate: -5px 1px; }
+  50%  { translate: 0 -3px; }
+  100% { translate: 5px 1px; }
+}
+@keyframes fishwag { from { rotate: -9deg; scale: 1 1; } to { rotate: 9deg; scale: .94 1.05; } }
+.song.on .sfish::before, .song.on .sfish::after {
+  content: ""; position: absolute; border-radius: 50%; pointer-events: none; opacity: 0;
+  border: 1.5px solid rgba(255, 255, 255, .85); background: rgba(255, 255, 255, .25);
+}
+.song.on .sfish::before { width: 5px; height: 5px; left: 2px; top: 5px; animation: bubble 1.9s ease-out infinite; }
+.song.on .sfish::after { width: 4px; height: 4px; left: 8px; top: 8px; animation: bubble 2.4s ease-out -.9s infinite; }
+@keyframes bubble {
+  0%   { opacity: 0; translate: 0 4px; scale: .5; }
+  20%  { opacity: 1; }
+  100% { opacity: 0; translate: -3px -22px; scale: 1.2; }
+}
+@keyframes catbob { from { translate: 0 0; rotate: -6deg; } to { translate: 0 -3px; rotate: 6deg; } }
 /* isi kotak yang menyala: teks dibuat terang, bar dan ombak disesuaikan supaya tetap kelihatan di atas pink */
 .song.on .stt { color: #fff; }
 .song.on .ssg { color: #ffe3ec; }
@@ -597,7 +665,9 @@ body.splash-on #snow, body.splash-on #bubbles { z-index: 49; }
 .song.on .sfill { background: #ffe3ec; }
 .song.on .sfill::before { filter: brightness(1.3); }
 @media (prefers-reduced-motion: reduce) {
-  .song.on .sbox, .song.on .sbox::before, .song.on .sbox::after { animation: none; }
+  .song.on .sbox, .song.on .sbox::before, .song.on .sbox::after, .song.on .sart, .song.on .sart::before, .song.on .sart::after,
+  .song.on .stx::after, .song.on .stt::after, .song.on .scat svg,
+  .song.on .sfish, .song.on .sfish svg, .song.on .sfish::before, .song.on .sfish::after { animation: none; }
   .song.on .sbox::before, .song.on .sbox::after { opacity: .85; }
 }
 .srow { display: flex; align-items: center; gap: 12px; }
