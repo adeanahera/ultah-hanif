@@ -51,23 +51,7 @@ a { color: var(--accent); }
 .splash small { font-family: var(--mono); font-size: 13px; letter-spacing: .08em; color: #aab2d6; }
 .splash h1 { font-family: var(--display); font-size: clamp(44px, 12.5vw, 76px); line-height: .95; margin: 12px 0 20px; }
 .splash h1 em { color: var(--blush); }
-/* tiga balon warna-warni di samping judul layar awal (pink, biru muda, kuning), melayang pelan dan bergoyang */
 .splash-head { position: relative; }
-.splash h1 { position: relative; }
-.splash-head::before, .splash-head::after, .splash h1::after {
-  content: ""; position: absolute; pointer-events: none; z-index: 0; background: no-repeat center / contain;
-  transform-origin: 50% 100%; animation: balloonfloat 3.4s ease-in-out infinite alternate;
-}
-.splash-head::before { width: 34px; height: 60px; right: 78px; top: 34px; background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 70%22%3E%3Cpath d=%22M20 50 Q14 58 21 69%22 stroke=%22%23c7cde8%22 stroke-width=%221.4%22 fill=%22none%22 stroke-linecap=%22round%22/%3E%3Cellipse cx=%2220%22 cy=%2222%22 rx=%2216%22 ry=%2220%22 fill=%22%23ff8fab%22/%3E%3Cpath d=%22M16.5 42 L23.5 42 L20 47 Z%22 fill=%22%23ff8fab%22/%3E%3Cellipse cx=%2213.5%22 cy=%2214%22 rx=%224%22 ry=%227%22 fill=%22%23fff%22 opacity=%22.5%22 transform=%22rotate%28-18 13.5 14%29%22/%3E%3C/svg%3E"); }
-.splash-head::after { width: 40px; height: 70px; right: 30px; top: 18px; background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 70%22%3E%3Cpath d=%22M20 50 Q14 58 21 69%22 stroke=%22%23c7cde8%22 stroke-width=%221.4%22 fill=%22none%22 stroke-linecap=%22round%22/%3E%3Cellipse cx=%2220%22 cy=%2222%22 rx=%2216%22 ry=%2220%22 fill=%22%238fc3f5%22/%3E%3Cpath d=%22M16.5 42 L23.5 42 L20 47 Z%22 fill=%22%238fc3f5%22/%3E%3Cellipse cx=%2213.5%22 cy=%2214%22 rx=%224%22 ry=%227%22 fill=%22%23fff%22 opacity=%22.5%22 transform=%22rotate%28-18 13.5 14%29%22/%3E%3C/svg%3E"); animation-duration: 4s; animation-delay: -1.3s; }
-.splash h1::after { width: 32px; height: 56px; right: 4px; top: 52px; background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 70%22%3E%3Cpath d=%22M20 50 Q14 58 21 69%22 stroke=%22%23c7cde8%22 stroke-width=%221.4%22 fill=%22none%22 stroke-linecap=%22round%22/%3E%3Cellipse cx=%2220%22 cy=%2222%22 rx=%2216%22 ry=%2220%22 fill=%22%23ffd36e%22/%3E%3Cpath d=%22M16.5 42 L23.5 42 L20 47 Z%22 fill=%22%23ffd36e%22/%3E%3Cellipse cx=%2213.5%22 cy=%2214%22 rx=%224%22 ry=%227%22 fill=%22%23fff%22 opacity=%22.5%22 transform=%22rotate%28-18 13.5 14%29%22/%3E%3C/svg%3E"); animation-duration: 3.1s; animation-delay: -2.1s; }
-@keyframes balloonfloat {
-  from { rotate: -5deg; translate: 0 3px; }
-  to   { rotate: 5deg; translate: 0 -6px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .splash-head::before, .splash-head::after, .splash h1::after { animation: none; }
-}
 /* tic tac toe: harus menang dulu untuk masuk */
 .ttt-rule { margin: 0 0 14px; font-size: 15px; color: #aab2d6; }
 .ttt { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: min(100%, 300px, 32vh); }
@@ -94,6 +78,28 @@ main { max-width: 860px; width: 100%; flex: 1 0 auto; margin: 0 auto; padding: 0
 
 .hero { padding: 36px 0 12px; }
 .hero h1 { font-family: "Pacifico", "Caveat", cursive; font-size: clamp(22px, 6.2vw, 34px); line-height: 1.4; text-align: left; color: #fff; margin: 0 0 28px; text-shadow: 0 2px 0 rgba(255, 143, 171, .35); }
+/* balon di samping judul utama (bisa diletuskan lewat script.js) */
+.hero { position: relative; }
+.hballs { position: absolute; left: min(calc(100% - 136px), 610px); top: 22px; display: flex; align-items: flex-start; gap: 8px; pointer-events: none; z-index: 3; }
+.hb {
+  all: unset; box-sizing: border-box; display: block; cursor: pointer; pointer-events: auto; -webkit-tap-highlight-color: transparent;
+  transform-origin: 50% 100%; animation: balloonfloat 3.6s ease-in-out var(--d, 0s) infinite alternate;
+}
+.hb svg { display: block; width: 100%; height: 100%; filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .25)); }
+.hb:hover svg { filter: drop-shadow(0 3px 6px rgba(255, 255, 255, .35)); }
+.hb:focus-visible { outline: 2px dashed #ffdde4; outline-offset: 3px; border-radius: 12px; }
+.hb.pop { animation: hbpop .26s ease-out forwards; pointer-events: none; }
+.hb.gone { visibility: hidden; pointer-events: none; animation: none; }
+.hb.grow { animation: hbgrow .8s cubic-bezier(.2, 1.4, .4, 1) both, balloonfloat 3.6s ease-in-out var(--d, 0s) infinite alternate .8s; }
+@keyframes balloonfloat { from { rotate: -5deg; translate: 0 3px; } to { rotate: 5deg; translate: 0 -6px; } }
+@keyframes hbpop { 0% { scale: 1; opacity: 1; } 40% { scale: 1.45; opacity: 1; } 100% { scale: 1.8; opacity: 0; } }
+@keyframes hbgrow { from { scale: 0; opacity: 0; } to { scale: 1; opacity: 1; } }
+@media (max-width: 640px) {
+  .hero { padding-top: 92px; }
+  .hballs { top: 10px; left: auto; right: 6px; }
+}
+@media (prefers-reduced-motion: reduce) { .hb, .hb.grow { animation: none; } }
+.splash-head .hballs.hballs-splash { left: auto; right: 4px; top: 14px; }
 .hero h1 .l1,
 .hero h1 .l2 { display: block; color: #fff; }
 .hero h1 .l1 { color: var(--accent); }
@@ -216,6 +222,15 @@ main.paged > section.out { display: block; animation: pageout .38s ease both; }
 .cake-wrap { text-align: center; margin: 4px 0 18px; }
 .cake { background: none; border: 0; padding: 0; cursor: pointer; width: 150px; }
 .cake svg { display: block; width: 100%; height: auto; overflow: visible; }
+/* kue terus bergoyang pelan, sebelum maupun sesudah lilinnya ditiup */
+.cake svg { transform-origin: 50% 100%; animation: cakedance 2.6s ease-in-out infinite; }
+@keyframes cakedance {
+  0%, 100% { rotate: -3deg; scale: 1 1; translate: 0 0; }
+  25%      { rotate: 0deg; scale: 1.035 .965; translate: 0 0; }
+  50%      { rotate: 3deg; scale: 1 1.03; translate: 0 -5px; }
+  75%      { rotate: 0deg; scale: .975 1.025; translate: 0 -2px; }
+}
+.cake:active svg { animation-duration: .5s; }
 .flame { transform-box: fill-box; transform-origin: 50% 100%; animation: flick .5s ease-in-out infinite alternate; transition: opacity .25s; }
 @keyframes flick { from { transform: scale(1, 1); } to { transform: scale(1.14, .92); } }
 .smoke { opacity: 0; }
@@ -225,6 +240,31 @@ main.paged > section.out { display: block; animation: pageout .38s ease both; }
 .cake-hint { margin: 6px 0 0; font-family: "Caveat", cursive; font-size: 22px; }
 .orn { text-align: center; color: var(--accent); letter-spacing: .5em; margin: 4px 0 22px; opacity: .85; }
 .orn::before { content: "\2726  \2661  \2726"; }
+.orn.built::before { content: none; }
+.orn.built { display: flex; justify-content: center; align-items: center; gap: 6px; letter-spacing: 0; }
+.orn-s {
+  all: unset; box-sizing: border-box; cursor: pointer; padding: 4px 12px; font-size: 1.15em; line-height: 1; color: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+.orn-s:focus-visible { outline: 2px dashed currentColor; outline-offset: 2px; border-radius: 8px; }
+.orn-s.wig { animation: ornwig .8s cubic-bezier(.3, 1.3, .5, 1); }
+.orn-s.heart.wig { animation-name: ornbeat; }
+@keyframes ornwig {
+  0%   { rotate: 0deg; scale: 1; }
+  15%  { rotate: -24deg; scale: 1.5; }
+  35%  { rotate: 20deg; scale: 1.35; }
+  55%  { rotate: -14deg; scale: 1.2; }
+  75%  { rotate: 8deg; scale: 1.1; }
+  100% { rotate: 0deg; scale: 1; }
+}
+@keyframes ornbeat {
+  0%, 100% { rotate: 0deg; scale: 1; }
+  15%  { rotate: -12deg; scale: 1.55; }
+  30%  { rotate: 10deg; scale: 1.15; }
+  45%  { rotate: -8deg; scale: 1.45; }
+  60%  { rotate: 6deg; scale: 1.1; }
+  80%  { rotate: -3deg; scale: 1.2; }
+}
 
 /* bintang 5 ranked match (halaman 02) */
 .stars { display: flex; justify-content: center; gap: 10px; margin: 4px 0 8px; }
@@ -758,6 +798,7 @@ body.splash-on #snow, body.splash-on #bubbles { z-index: 49; }
 .orn.pulse { animation: ornpulse .55s ease; }
 @keyframes ornpulse { 40% { transform: scale(1.3); opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .orn.pulse, .wish:not([hidden]) { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .cake svg, .orn-s.wig { animation: none; } }
 
 /* ---------- gosok foto: penutup foto berupa kanvas yang digosok ---------- */
 .cv.scratch { display: block; overflow: hidden; background: none !important; border: 0; box-shadow: none; cursor: pointer; touch-action: pan-y; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
