@@ -17,11 +17,15 @@ window.scratchify = function (cv, onDone, opts) {
   cv.textContent = "";
   var canvas = document.createElement("canvas");
   canvas.setAttribute("aria-hidden", "true");
+  // Gosokan ke segala arah (termasuk naik-turun) harus sampai ke kanvas, bukan diambil alih scroll halaman.
+  // Setelah foto terbuka, kanvas tidak menerima sentuhan lagi, jadi scroll normal kembali.
+  cv.style.touchAction = "none";
+  canvas.style.touchAction = "none";
   cv.appendChild(canvas);
   var ctx = canvas.getContext("2d");
   if (!ctx) { if (onDone) cv.addEventListener("click", function () { onDone(); }); return; }
 
-  var THRESHOLD = 0.5;
+  var THRESHOLD = 0.35;   // sebagian kecil tergosok saja, sisanya terbuka sendiri
   var ready = false, painted = false, done = false, down = false, last = null;
   var dpr = 1, cssW = 0, cssH = 0, brush = 16, cell = 10, cols = 0, rows = 0, grid = null, marked = 0, ro = null;
 
@@ -114,7 +118,7 @@ window.scratchify = function (cv, onDone, opts) {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     cssW = w; cssH = h;
     canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
-    brush = Math.max(11, Math.min(22, Math.min(w, h) * 0.09)) * dpr;   // radius kuas, dalam piksel kanvas
+    brush = Math.max(16, Math.min(34, Math.min(w, h) * 0.13)) * dpr;   // radius kuas, dalam piksel kanvas
     cell = Math.max(6 * dpr, brush * 0.75);
     cols = Math.ceil(canvas.width / cell); rows = Math.ceil(canvas.height / cell);
     grid = new Uint8Array(cols * rows); marked = 0;
