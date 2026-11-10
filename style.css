@@ -269,12 +269,22 @@ main.paged > section.out { display: block; animation: pageout .38s ease both; }
 /* bintang 5 ranked match (halaman 02) */
 .stars { display: flex; justify-content: center; gap: 10px; margin: 4px 0 8px; }
 .star { width: 34px; height: 34px; fill: var(--accent); }
-main.paged > section.on .star { animation: starpop .6s cubic-bezier(.2, 1.6, .4, 1) both; }
-main.paged > section.on .star:nth-child(1) { animation-delay: .5s; }
-main.paged > section.on .star:nth-child(2) { animation-delay: .85s; }
-main.paged > section.on .star:nth-child(3) { animation-delay: 1.2s; }
-main.paged > section.on .star:nth-child(4) { animation-delay: 1.55s; }
-main.paged > section.on .star:nth-child(5) { animation-delay: 1.9s; }
+main.paged > section.on .star { animation: starpop .6s cubic-bezier(.2, 1.6, .4, 1) both, startwinkle 2.6s ease-in-out infinite; transform-origin: 50% 50%; }
+main.paged > section.on .star:nth-child(1) { animation-delay: .5s, 1.1s; }
+main.paged > section.on .star:nth-child(2) { animation-delay: .85s, 1.75s; }
+main.paged > section.on .star:nth-child(3) { animation-delay: 1.2s, 2.4s; }
+main.paged > section.on .star:nth-child(4) { animation-delay: 1.55s, 3.05s; }
+main.paged > section.on .star:nth-child(5) { animation-delay: 1.9s, 3.7s; }
+/* bintang berkelip bergantian; yang sudah dinyalakan (lit) berdenyut dengan cahaya */
+@keyframes startwinkle {
+  0%, 100% { scale: 1; rotate: 0deg; }
+  45%      { scale: 1.22; rotate: 14deg; }
+  70%      { scale: .94; rotate: -8deg; }
+}
+@keyframes starglow {
+  0%, 100% { filter: drop-shadow(0 0 5px rgba(255, 210, 122, .7)); }
+  50%      { filter: drop-shadow(0 0 13px rgba(255, 226, 150, 1)); }
+}
 @keyframes starpop { from { opacity: 0; transform: scale(.2) rotate(-40deg); } to { opacity: 1; transform: none; } }
 
 /* foto polaroid (halaman 03) */
@@ -477,6 +487,7 @@ main.paged > section.on .al {
 /* ---------- foto bergerak seperti halaman 07 (section 02, 03, 04) ----------
    Foto muncul membal (alpop), lalu menggantung dan bergoyang pelan dari titik atasnya (sway),
    dan meluruskan diri waktu disentuh. Variabel --pd, --fd, --fdl, --sw, --r diisi script.js supaya tiap foto beda-beda. */
+@keyframes mvbob { from { translate: 0 0; } to { translate: 0 -7px; } }
 @keyframes psway {
   from { transform: rotate(calc(var(--sw, 1deg) * -1)); }
   to   { transform: rotate(var(--sw, 1deg)); }
@@ -499,8 +510,9 @@ main.paged > section.on.pola .ph {
 .mv-photo:hover { rotate: 0deg; scale: 1.02; }
 main.paged > section.on .mv-photo {
   animation: alpop .6s cubic-bezier(.2, 1.6, .4, 1) .1s backwards,
-             psway 5.4s ease-in-out -1.5s infinite alternate;
-  --sw: .8deg;
+             psway 3.6s ease-in-out -1.5s infinite alternate,
+             mvbob 2.9s ease-in-out infinite alternate;
+  --sw: 2deg;
 }
 @media (prefers-reduced-motion: reduce) {
   main.paged > section.on.pola .ph, main.paged > section.on .mv-photo { animation: none !important; }
@@ -584,6 +596,7 @@ body.splash-on #snow, body.splash-on #bubbles { z-index: 49; }
 
 .star { cursor: pointer; -webkit-tap-highlight-color: transparent; transition: fill .3s, filter .3s; }
 .star.lit { fill: #ffd27a; filter: drop-shadow(0 0 7px rgba(255, 210, 122, .85)); }
+main.paged > section.on .star.lit { animation-name: starpop, startwinkle, starglow; animation-duration: .6s, 1.8s, 1.6s; animation-iteration-count: 1, infinite, infinite; animation-fill-mode: both; }
 .star-msg { margin: 0 0 14px; text-align: center; font-family: "Caveat", cursive; font-size: 22px; color: var(--muted); min-height: 1.2em; }
 .star-msg.full { color: var(--accent); }
 .duo-c { -webkit-tap-highlight-color: transparent; user-select: none; }
@@ -818,3 +831,54 @@ body.splash-on #snow, body.splash-on #bubbles { z-index: 49; }
   transition: opacity .8s ease, translate .35s ease-out;
 }
 .duo-c .chr { transition: translate .3s ease-out; }
+
+/* ---------- tambahan gerak: judul, kucing navigasi, tombol musik, petunjuk kue ---------- */
+.hero h1 .w { display: inline-block; white-space: nowrap; }
+.hero h1 .ch {
+  display: inline-block;
+  animation: chwave 2.8s ease-in-out calc(var(--i, 0) * .09s) infinite, chshine 6s ease-in-out calc(var(--i, 0) * .08s) infinite;
+}
+@keyframes chwave { 0%, 100% { translate: 0 0; } 50% { translate: 0 -3px; } }
+@keyframes chshine {
+  0%, 62%, 100% { filter: none; scale: 1; }
+  74% { filter: brightness(1.7) drop-shadow(0 0 7px rgba(255, 255, 255, .95)); scale: 1.14; }
+  86% { filter: none; scale: 1; }
+}
+
+.pg-num.on { animation: pgpop .5s cubic-bezier(.2, 1.6, .4, 1), pgbounce 2.2s ease-in-out .5s infinite; }
+@keyframes pgpop { from { scale: .7; rotate: -12deg; } to { scale: 1; rotate: 0deg; } }
+@keyframes pgbounce { 0%, 100% { translate: 0 0; } 50% { translate: 0 -3px; } }
+.pg-num.on .ey { transform-box: fill-box; transform-origin: 50% 50%; animation: pgblink 4.2s ease-in-out infinite; }
+@keyframes pgblink { 0%, 92%, 100% { scale: 1 1; } 95% { scale: 1 .1; } }
+
+.music.idle { animation: musicpulse 1.9s ease-in-out infinite; }
+@keyframes musicpulse {
+  0%   { scale: 1; box-shadow: 0 6px 20px rgba(0, 0, 0, .35), 0 0 0 0 rgba(255, 221, 228, .6); }
+  60%  { scale: 1.05; box-shadow: 0 6px 20px rgba(0, 0, 0, .35), 0 0 0 14px rgba(255, 221, 228, 0); }
+  100% { scale: 1; box-shadow: 0 6px 20px rgba(0, 0, 0, .35), 0 0 0 0 rgba(255, 221, 228, 0); }
+}
+.music.idle::before, .music.idle::after {
+  position: absolute; pointer-events: none; font-size: 17px; line-height: 1; color: var(--blush); opacity: 0;
+  text-shadow: 0 0 6px rgba(255, 221, 228, .8);
+}
+.music.idle::before { content: "\266A"; left: 16px; top: -2px; animation: musicnote 2.6s ease-out infinite; }
+.music.idle::after { content: "\266B"; right: 18px; top: -2px; animation: musicnote 3.1s ease-out -1.3s infinite; }
+@keyframes musicnote {
+  0%   { opacity: 0; translate: 0 6px; rotate: -8deg; }
+  20%  { opacity: 1; }
+  100% { opacity: 0; translate: 6px -30px; rotate: 16deg; }
+}
+
+.cake-hint { animation: hintbreathe 2.2s ease-in-out infinite; }
+.cake-hint::before {
+  content: ""; display: inline-block; width: 18px; height: 18px; margin-right: 8px; vertical-align: -2px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffdde4' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 21V5M5 12l7-7 7 7'/%3E%3C/svg%3E") center / contain no-repeat;
+  animation: hintpoint 1.1s ease-in-out infinite;
+}
+@keyframes hintbreathe { 0%, 100% { scale: 1; } 50% { scale: 1.05; } }
+@keyframes hintpoint { 0%, 100% { translate: 0 2px; } 50% { translate: 0 -6px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero h1 .ch, .pg-num.on, .pg-num.on .ey, .music.idle, .music.idle::before, .music.idle::after,
+  .cake-hint, .cake-hint::before, main.paged > section.on .star, main.paged > section.on .star.lit { animation: none !important; }
+}
