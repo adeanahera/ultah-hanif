@@ -926,8 +926,8 @@ window.scratchify = function (cv, onDone, opts) {
   var sec = document.getElementById("songsSec");
   if (!list || !sec) return;
   var bgm = document.getElementById("bgm");
-  var audio = new Audio();
-  audio.preload = "none";
+  // Tiap lagu punya elemen Audio sendiri (s.audio), jadi waktu pindah ke lagu lain, lagu sebelumnya
+  // cuma dijeda dan posisinya tetap di tempat terakhir. `cur` = lagu yang terakhir dipakai.
   var cur = null, bgmWas = false;
 
   var PLAY = '<svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>';
@@ -947,7 +947,7 @@ window.scratchify = function (cv, onDone, opts) {
     s.root.classList.toggle("on", yes);
     s.btn.setAttribute("aria-label", (yes ? "Jeda " : "Putar ") + s.title);
   }
-  function resetUI(s) { paint(s, 0, s.dur || 0); setPlaying(s, false); }
+  function resetUI(s) { try { s.audio.currentTime = 0; } catch (e) {} paint(s, 0, s.dur || 0); setPlaying(s, false); }
   function duckBgm() { if (bgm && !bgm.paused) { bgm.pause(); bgmWas = true; } }
   function restoreBgm() {
     if (bgm && bgmWas) { bgmWas = false; try { var p = bgm.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {} }
@@ -968,7 +968,7 @@ window.scratchify = function (cv, onDone, opts) {
         '<button class="spl" type="button">' + PLAY + PAUSE + '</button></div>' +
       '<div class="spr"><span class="sel">0:00</span>' +
         '<div class="sbw" role="slider" tabindex="0" aria-label="Posisi lagu" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">' +
-          '<div class="sbar"><div class="sfill"></div></div><span class="scat">' + ICO("ico-catb") + '</span></div>' +
+          '<div class="sbar"><div class="sfill"><i></i></div></div><span class="scat">' + ICO("ico-catb") + '</span></div>' +
         '<span class="sfish" aria-hidden="true">' + ICO("ico-fish") + '</span><span class="srm">--:--</span></div></div>' +
       '<p class="sdesc"></p>';
     root.querySelector(".sdesc").textContent = d.desc || "";
@@ -982,12 +982,24 @@ window.scratchify = function (cv, onDone, opts) {
     };
     setPlaying(s, false);
 
+    var a = new Audio();
+    a.preload = "none";
+    if (s.src) a.src = s.src;
+    a.volume = window.__vol == null ? 1 : window.__vol;
+    s.audio = a;
+    a.addEventListener("play", function () { window.__lastAudio = a; setPlaying(s, true); duckBgm(); });
+    a.addEventListener("pause", function () { if (!a.ended) setPlaying(s, false); });
+    a.addEventListener("loadedmetadata", function () { s.dur = a.duration; paint(s, a.currentTime, s.dur); });
+    a.addEventListener("timeupdate", function () { paint(s, a.currentTime, a.duration || s.dur); });
+    a.addEventListener("ended", function () { resetUI(s); if (cur === s) cur = null; restoreBgm(); });
+    a.addEventListener("error", function () { if (cur === s) fail(); });
+
     // ambil durasi total supaya langsung tampil sebelum lagunya diputar
     // (dijalankan sekali, waktu halaman 08 pertama kali dibuka, biar halaman lain nggak ikut berat)
     if (s.src) s.probe = function () {
       var probe = new Audio();
       probe.preload = "metadata";
-      probe.addEventListener("loadedmetadata", function () { s.dur = probe.duration; if (cur !== s) paint(s, 0, s.dur); });
+      probe.addEventListener("loadedmetadata", function () { s.dur = probe.duration; paint(s, (s.audio && s.audio.currentTime) || 0, s.dur); });
       probe.src = s.src;
       s.probe = null;
     };
@@ -995,15 +1007,15 @@ window.scratchify = function (cv, onDone, opts) {
     // geser / ketuk bar untuk loncat ke bagian lain (hanya untuk lagu yang sedang aktif)
     var drag = false;
     function seek(e) {
-      if (cur !== s) return;
-      var dur = audio.duration || s.dur;
+      if (!s.src) return;
+      var dur = s.audio.duration || s.dur;
       if (!dur || !isFinite(dur)) return;
       var r = s.slider.getBoundingClientRect();
-      audio.currentTime = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * dur;
-      paint(s, audio.currentTime, dur);
+      s.audio.currentTime = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * dur;
+      paint(s, s.audio.currentTime, dur);
     }
     s.slider.addEventListener("pointerdown", function (e) {
-      if (cur !== s) return;
+      if (!s.src) return;
       drag = true;
       try { s.slider.setPointerCapture(e.pointerId); } catch (x) {}
       seek(e);
@@ -1012,36 +1024,26 @@ window.scratchify = function (cv, onDone, opts) {
     s.slider.addEventListener("pointerup", function () { drag = false; });
     s.slider.addEventListener("pointercancel", function () { drag = false; });
     s.slider.addEventListener("keydown", function (e) {
-      if (cur !== s) return;
-      var dur = audio.duration || s.dur, step = e.key === "ArrowRight" ? 5 : e.key === "ArrowLeft" ? -5 : 0;
-      if (!step) return;
+      if (cur !== s || !s.src) return;
+      var dur = s.audio.duration || s.dur, step = e.key === "ArrowRight" ? 5 : e.key === "ArrowLeft" ? -5 : 0;
+      if (!step || !dur || !isFinite(dur)) return;
       e.preventDefault(); e.stopPropagation();
-      audio.currentTime = Math.min(dur, Math.max(0, audio.currentTime + step));
-      paint(s, audio.currentTime, dur);
+      s.audio.currentTime = Math.min(dur, Math.max(0, s.audio.currentTime + step));
+      paint(s, s.audio.currentTime, dur);
     });
 
     s.btn.addEventListener("click", function () {
       if (!s.src) { if (s.link) window.open(s.link, "_blank", "noopener"); return; }
-      if (cur === s) {
-        if (audio.paused) { var p0 = audio.play(); if (p0 && p0.catch) p0.catch(fail); } else audio.pause();
-        return;
-      }
-      if (cur) resetUI(cur);
+      if (!s.audio.paused) { s.audio.pause(); return; }
+      items.forEach(function (o) { if (o !== s && o.audio && !o.audio.paused) o.audio.pause(); });
       cur = s;
       duckBgm();
-      audio.src = s.src;
-      var p = audio.play();
+      var p = s.audio.play();
       if (p && p.catch) p.catch(function (err) { if (!err || err.name !== "AbortError") fail(); });
     });
     return s;
   });
 
-  audio.addEventListener("play", function () { if (cur) { setPlaying(cur, true); duckBgm(); } });
-  audio.addEventListener("pause", function () { if (cur && !audio.ended) setPlaying(cur, false); });
-  audio.addEventListener("loadedmetadata", function () { if (cur) { cur.dur = audio.duration; paint(cur, audio.currentTime, cur.dur); } });
-  audio.addEventListener("timeupdate", function () { if (cur) paint(cur, audio.currentTime, audio.duration || cur.dur); });
-  audio.addEventListener("ended", function () { if (cur) { resetUI(cur); cur = null; } restoreBgm(); });
-  audio.addEventListener("error", function () { if (cur) fail(); });
 
   // pindah dari halaman 08: lagu dijeda dan musik latar balik lagi
   var main = document.querySelector("main");
@@ -1049,9 +1051,84 @@ window.scratchify = function (cv, onDone, opts) {
   var probed = false;
   document.addEventListener("pagechange", function (e) {
     if (e.detail === idx && !probed) { probed = true; items.forEach(function (s) { if (s.probe) s.probe(); }); }
-    if (e.detail !== idx && cur && !audio.paused) { audio.pause(); restoreBgm(); }
+    if (e.detail !== idx) { items.forEach(function (o) { if (o.audio && !o.audio.paused) o.audio.pause(); }); restoreBgm(); }
   });
   window.__songs = items;
+})();
+
+// Pintasan keyboard musik, berlaku di semua halaman (musik latar maupun lagu di halaman 08):
+//   spasi = jeda / lanjut (musik latar atau lagu)
+//   HANYA waktu ada lagu di halaman 08 yang sedang main:
+//     panah kanan / kiri = maju / mundur 5 detik      panah atas / bawah = volume naik / turun
+//   Selain itu panah bekerja seperti biasa (kiri/kanan pindah halaman, atas/bawah scroll).
+//   Waktu lagu main, pindah halaman lewat keyboard jadi Shift + panah kiri/kanan.
+(function () {
+  var bgm = document.getElementById("bgm");
+  if (!bgm) return;
+  var body = document.body;
+  window.__vol = window.__vol == null ? 1 : window.__vol;
+  bgm.addEventListener("play", function () { window.__lastAudio = bgm; });
+
+  function songs() { return window.__songs || []; }
+  // lagu di halaman 08 yang sedang main (null kalau tidak ada)
+  function playingSong() { var l = songs(); for (var i = 0; i < l.length; i++) if (l[i].audio && !l[i].audio.paused) return l[i]; return null; }
+  window.songPlaying = function () { return !!playingSong(); };
+  function allAudio() { var r = [bgm]; songs().forEach(function (s) { if (s.audio) r.push(s.audio); }); return r; }
+  function say(m) { if (window.toast) window.toast(m); }
+  function lbOpen() { var b = document.getElementById("lightbox"); return !!(b && b.classList.contains("on")); }
+  // yang dikendalikan = yang sedang main; kalau semuanya diam, yang terakhir dipakai
+  function target() {
+    var list = allAudio();
+    for (var i = list.length - 1; i >= 0; i--) if (!list[i].paused) return list[i];
+    return window.__lastAudio || bgm;
+  }
+  function setVol(v) {
+    v = Math.min(1, Math.max(0, Math.round(v * 10) / 10));
+    window.__vol = v;
+    allAudio().forEach(function (a) { try { a.volume = v; } catch (e) {} });
+    return v;
+  }
+  function toggle(a) {
+    if (a === bgm) { var mb = document.getElementById("musicBtn"); if (mb && !mb.hidden) mb.click(); return; }
+    var s = songs().filter(function (x) { return x.audio === a; })[0];
+    if (!s) return;
+    if (a.paused) s.btn.click(); else a.pause();
+  }
+  function seekBy(a, d) {
+    var dur = a.duration;
+    if (!dur || !isFinite(dur)) return;
+    a.currentTime = Math.min(dur, Math.max(0, a.currentTime + d));
+    say((d > 0 ? "maju " : "mundur ") + Math.abs(d) + " detik");
+  }
+
+  var spaceDown = false;
+  document.addEventListener("keydown", function (e) {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    if (body.classList.contains("locked") || lbOpen()) return;
+    var t = e.target;
+    if (t && t.closest && t.closest("input, textarea, select, [contenteditable], .cv.scratch")) return;
+    var k = e.key;
+    if (k === " " || k === "Spacebar") {
+      e.preventDefault(); spaceDown = true;
+      if (!e.repeat) toggle(target());
+    } else if ((k === "ArrowRight" || k === "ArrowLeft") && !e.shiftKey) {
+      // hanya waktu ada lagu di halaman 08 yang sedang main; selain itu panah kiri/kanan pindah halaman seperti biasa
+      var ps = playingSong();
+      if (!ps) return;
+      e.preventDefault();
+      seekBy(ps.audio, k === "ArrowRight" ? 5 : -5);
+    } else if ((k === "ArrowUp" || k === "ArrowDown") && !e.shiftKey) {
+      // volume cuma aktif waktu ada lagu di halaman 08 yang sedang main; selain itu panah atas/bawah scroll seperti biasa
+      if (!playingSong()) return;
+      e.preventDefault();
+      var v = setVol(window.__vol + (k === "ArrowUp" ? 0.1 : -0.1));
+      say("volume " + Math.round(v * 100) + "%");
+    }
+  });
+  // spasi di tombol yang sedang fokus biasanya "menekan" tombolnya saat dilepas; dicegah supaya tidak jeda dua kali
+  document.addEventListener("keyup", function (e) {
+    if ((e.key === " " || e.key === "Spacebar") && spaceDown) { spaceDown = false; e.preventDefault(); }
+  });
 })();
 
 // Tambahan interaksi: efek ketuk, jejak kursor, salju yang menghindar, geser/panah pindah halaman,
@@ -1141,7 +1218,9 @@ window.scratchify = function (cv, onDone, opts) {
   document.addEventListener("keydown", function (e) {
     if (!window.goPage || body.classList.contains("locked") || lbOn()) return;
     if (e.target && e.target.closest && e.target.closest("[role=slider]")) return;
-    if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    // ada lagu di halaman 08 yang main: panah biasa dipakai untuk maju/mundur lagu, jadi pindah halaman pakai Shift + panah
+    if ((window.songPlaying && window.songPlaying()) ? !e.shiftKey : e.shiftKey) return;
     var c = window.getPage();
     if (e.key === "ArrowRight") window.goPage(c + 1);
     else if (e.key === "ArrowLeft") window.goPage(c - 1);
@@ -1163,7 +1242,7 @@ window.scratchify = function (cv, onDone, opts) {
   if (pf) {
     var hint = document.createElement("p");
     hint.className = "swipe-hint";
-    hint.textContent = "tips: geser layar ke kiri/kanan buat pindah halaman (di laptop: panah ← →, angka 1–8, dan M buat musik)";
+    hint.textContent = "tips: geser layar ke kiri/kanan buat pindah halaman (di laptop: panah ← →, angka 1–8, spasi jeda/lanjut musik, M buat musik). waktu lagu di halaman 08 lagi main: ← → mundur/maju 5 detik, ↑ ↓ volume, dan pindah halaman pakai Shift + ← →";
     pf.parentNode.insertBefore(hint, pf.nextSibling);
   }
 
