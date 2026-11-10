@@ -764,9 +764,11 @@ window.scratchify = function (cv, onDone, opts) {
       cv.classList.add("peel");
       setTimeout(function () { if (cv.parentNode) cv.parentNode.removeChild(cv); }, reduce ? 0 : 480);
     }
+    if (!reduce) { el.classList.add("got"); setTimeout(function () { el.classList.remove("got"); }, 800); }
     if (sparkle && !reduce && window.burst) {
       var r = el.getBoundingClientRect();
       window.burst(r.left + r.width / 2, r.top + r.height / 2, 14);
+      if (window.spawnFx) for (var q = 0; q < 5; q++) window.spawnFx(r.left + r.width * (0.15 + 0.7 * Math.random()), r.top + r.height * (0.2 + 0.6 * Math.random()), "\u2726", 46, 900 + q * 120);
     }
   }
   function openAll() {
@@ -851,9 +853,11 @@ window.scratchify = function (cv, onDone, opts) {
         cv.classList.add("peel");
         setTimeout(function () { if (cv.parentNode) cv.parentNode.removeChild(cv); }, reduce ? 0 : 480);
       }
+      if (!reduce) { ph.classList.add("got"); setTimeout(function () { ph.classList.remove("got"); }, 800); }
       if (sparkle && !reduce && window.burst) {
         var r = ph.getBoundingClientRect();
         window.burst(r.left + r.width / 2, r.top + Math.min(r.height / 2, 260), 18);
+        if (window.spawnFx) for (var q = 0; q < 5; q++) window.spawnFx(r.left + r.width * (0.15 + 0.7 * Math.random()), r.top + Math.min(r.height, 520) * (0.2 + 0.6 * Math.random()), "\u2726", 46, 900 + q * 120);
       }
     }
     function openAll() {
@@ -1267,6 +1271,7 @@ window.scratchify = function (cv, onDone, opts) {
     setTimeout(rm, dur + 300);
     body.appendChild(el);
   }
+  window.spawnFx = spawn;
   if (!reduce) {
     document.addEventListener("pointerdown", function (e) {
       for (var i = 0; i < 5; i++) spawn(e.clientX, e.clientY, pick(glyphs), 46, rnd(700, 1100));
