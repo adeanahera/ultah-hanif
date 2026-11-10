@@ -186,7 +186,21 @@ window.scratchify = function (cv, onDone, opts) {
   function label() { musicBtn.textContent = bgm.paused ? "putar musik" : "jeda musik"; }
   bgm.addEventListener("play", label);
   bgm.addEventListener("pause", label);
-  bgm.addEventListener("error", function () { musicBtn.hidden = true; });
+  // Dua lagu latar diputar bergantian terus-menerus: musik.mp3 -> musik2.mp3 -> musik.mp3 -> ...
+  // Lagu pertama = yang tertulis di <audio id="bgm"> pada index.html.
+  var TRACKS = ["musik.mp3", "musik2.mp3"], trk = 0;
+  bgm.loop = false;
+  function playBgm() { try { var p = bgm.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {} }
+  bgm.addEventListener("ended", function () {
+    trk = (trk + 1) % TRACKS.length;
+    bgm.src = TRACKS[trk];
+    playBgm();
+  });
+  bgm.addEventListener("error", function () {
+    // kalau lagu kedua gagal dimuat, balik ke lagu pertama dan ulang seperti dulu
+    if (trk > 0) { trk = 0; bgm.src = TRACKS[0]; bgm.loop = true; playBgm(); return; }
+    musicBtn.hidden = true;
+  });
   label();
 
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
