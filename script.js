@@ -547,14 +547,14 @@ window.scratchify = function (cv, onDone, opts) {
     else { running = false; ctx.clearRect(0, 0, W, H); }
   }
 
-  window.burst = function (x, y, n) {
+  window.burst = function (x, y, n, palette) {
     if (reduce || !ctx) return;
     n = n || 70;
     for (var i = 0; i < n; i++) {
       var a = Math.random() * Math.PI * 2, sp = 3 + Math.random() * 7;
       parts.push({ x: x, y: y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 5,
         w: 5 + Math.random() * 6, h: 3 + Math.random() * 5, rot: Math.random() * 6,
-        vr: (Math.random() - 0.5) * 0.4, c: cols[(Math.random() * cols.length) | 0],
+        vr: (Math.random() - 0.5) * 0.4, c: (palette || cols)[(Math.random() * (palette || cols).length) | 0],
         life: 90 + Math.random() * 60 });
     }
     if (!running) { running = true; window.requestAnimationFrame(step); }
@@ -1131,6 +1131,61 @@ window.scratchify = function (cv, onDone, opts) {
   });
 })();
 
+// Tiga balon di samping judul utama: ketuk satu per satu untuk meletuskan, keluar confetti. Setelah habis, balon tumbuh lagi.
+(function () {
+  var BALLOONS = [
+    { c: "#ff8fab", pal: ["#ff8fab", "#ffdde4", "#ffffff", "#ff5c8a"], w: 38, h: 66, top: 8, d: "0s" },
+    { c: "#8fc3f5", pal: ["#8fc3f5", "#d6ebff", "#ffffff", "#5aa5ee"], w: 44, h: 76, top: 0, d: "-1.3s" },
+    { c: "#ffd36e", pal: ["#ffd36e", "#fff3c4", "#ffffff", "#ffb703"], w: 36, h: 62, top: 14, d: "-2.1s" }
+  ];
+  function svg(c) {
+    return '<svg viewBox="0 0 40 70" aria-hidden="true" focusable="false">' +
+      '<path d="M20 50 Q14 58 21 69" stroke="#c7cde8" stroke-width="1.4" fill="none" stroke-linecap="round"/>' +
+      '<ellipse cx="20" cy="22" rx="16" ry="20" fill="' + c + '"/>' +
+      '<path d="M16.5 42 L23.5 42 L20 47 Z" fill="' + c + '"/>' +
+      '<ellipse cx="13.5" cy="14" rx="4" ry="7" fill="#fff" opacity=".5" transform="rotate(-18 13.5 14)"/></svg>';
+  }
+  // satu set balon untuk satu tempat (layar awal dan judul utama), masing-masing meletus dan tumbuh lagi sendiri-sendiri
+  function setup(host, extraClass) {
+  if (!host) return;
+  var box = document.createElement("div");
+  box.className = "hballs" + (extraClass ? " " + extraClass : "");
+  var left = BALLOONS.length;
+  var btns = BALLOONS.map(function (b) {
+    var el = document.createElement("button");
+    el.type = "button"; el.className = "hb";
+    el.setAttribute("aria-label", "Letuskan balon");
+    el.style.cssText = "width:" + b.w + "px;height:" + b.h + "px;margin-top:" + b.top + "px;--d:" + b.d + ";";
+    el.innerHTML = svg(b.c);
+    el.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (el.classList.contains("pop") || el.classList.contains("gone")) return;
+      var r = el.getBoundingClientRect();
+      if (window.burst) window.burst(r.left + r.width / 2, r.top + r.height * 0.32, 46, b.pal);
+      el.classList.add("pop");
+      left--;
+      setTimeout(function () { el.classList.add("gone"); el.classList.remove("pop"); }, 260);
+      if (left === 0) {
+        if (window.toast) window.toast("pop! balonnya habis… tunggu, tumbuh lagi 🎈");
+        setTimeout(function () {
+          btns.forEach(function (x, i) {
+            x.classList.remove("gone", "pop");
+            x.classList.add("grow");
+            setTimeout(function () { x.classList.remove("grow"); }, 900 + i * 150);
+          });
+          left = BALLOONS.length;
+        }, 4500);
+      }
+    });
+    box.appendChild(el);
+    return el;
+  });
+  host.appendChild(box);
+  }
+  setup(document.querySelector(".hero"));
+  setup(document.querySelector(".splash-head"), "hballs-splash");
+})();
+
 // Tambahan interaksi: efek ketuk, jejak kursor, salju yang menghindar, geser/panah pindah halaman,
 // progres baca, teks muncul saat digulir, typewriter, bintang & kucing yang bisa diajak main, swipe di foto besar.
 (function () {
@@ -1471,13 +1526,24 @@ window.scratchify = function (cv, onDone, opts) {
     "senyum dulu dong ✦"
   ];
   var ni = 0;
+  // tiap simbol (✦ ♡ ✦) berdiri sendiri: yang diketuk saja yang goyang, confetti keluar dari simbol itu
   Array.prototype.forEach.call(document.querySelectorAll(".orn"), function (el) {
-    el.addEventListener("click", function () {
-      el.classList.remove("pulse"); void el.offsetWidth; el.classList.add("pulse");
-      var r = el.getBoundingClientRect();
-      pop(r.left + r.width / 2, r.top + r.height / 2, 22);
-      say(notes[ni % notes.length]);
-      ni++;
+    el.textContent = "";
+    el.classList.add("built");
+    ["\u2726", "\u2661", "\u2726"].forEach(function (ch, i) {
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "orn-s" + (i === 1 ? " heart" : "");
+      b.textContent = ch;
+      b.setAttribute("aria-label", i === 1 ? "hati" : "bintang");
+      b.addEventListener("click", function () {
+        b.classList.remove("wig"); void b.offsetWidth; b.classList.add("wig");
+        var r = b.getBoundingClientRect();
+        pop(r.left + r.width / 2, r.top + r.height / 2, 14);
+        say(notes[ni % notes.length]);
+        ni++;
+      });
+      b.addEventListener("animationend", function () { b.classList.remove("wig"); });
+      el.appendChild(b);
     });
   });
 
