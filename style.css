@@ -554,7 +554,52 @@ body.splash-on #snow, body.splash-on #bubbles { z-index: 49; }
 /* ---------- halaman 08: lagu ---------- */
 .songs { display: flex; flex-direction: column; gap: 26px; text-align: left; }
 .sbox { border: 1px solid rgba(255, 221, 228, .3); border-radius: 14px; background: rgba(255, 221, 228, .07); padding: 10px 12px; transition: border-color .2s, background .2s; }
-.song.on .sbox { border-color: #ff8fab; background: rgba(255, 221, 228, .14); }
+/* kotak lagu yang SEDANG DIPUTAR (kelas .on): pink pekat tidak transparan, glow berdenyut di tepi,
+   kilap yang menyapu dari kiri ke kanan, dan sparkle berkelip di pinggir kotak. Lagu yang dijeda / tidak main tetap polos. */
+.song.on .sbox {
+  --spk-w: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M7 0Q7.9 6.1 14 7Q7.9 7.9 7 14Q6.1 7.9 0 7Q6.1 6.1 7 0Z' fill='%23ffffff'/%3E%3C/svg%3E");
+  --spk-g: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M7 0Q7.9 6.1 14 7Q7.9 7.9 7 14Q6.1 7.9 0 7Q6.1 6.1 7 0Z' fill='%23ffeeb0'/%3E%3C/svg%3E");
+  position: relative;
+  border-color: rgba(255, 232, 240, .95);
+  background:
+    linear-gradient(110deg, transparent 38%, rgba(255, 255, 255, .32) 50%, transparent 62%) 100% 0 / 260% 100% no-repeat,
+    linear-gradient(135deg, #cf4a78 0%, #b83f85 55%, #8f449c 100%);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .35), 0 0 16px rgba(255, 143, 171, .65), 0 8px 22px rgba(0, 0, 0, .35);
+  animation: sboxshine 3.8s ease-in-out infinite, sboxglow 2.4s ease-in-out infinite alternate;
+}
+@keyframes sboxshine { 0%, 30% { background-position: 100% 0, 0 0; } 100% { background-position: 0% 0, 0 0; } }
+@keyframes sboxglow {
+  from { box-shadow: 0 0 0 1px rgba(255, 255, 255, .22), 0 0 10px rgba(255, 143, 171, .45), 0 8px 22px rgba(0, 0, 0, .35); }
+  to   { box-shadow: 0 0 0 1px rgba(255, 255, 255, .55), 0 0 24px rgba(255, 143, 171, .9), 0 8px 22px rgba(0, 0, 0, .35); }
+}
+.song.on .sbox::before, .song.on .sbox::after {
+  content: ""; position: absolute; inset: -8px; pointer-events: none; background-repeat: no-repeat;
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, .95));
+}
+.song.on .sbox::before {
+  background-image: var(--spk-w), var(--spk-w), var(--spk-w), var(--spk-w), var(--spk-w);
+  background-size: 12px 12px, 16px 16px, 10px 10px, 14px 14px, 10px 10px;
+  background-position: 9% 0, 46% 0, 100% 18%, 70% 100%, 0 62%;
+  animation: spk 2.6s ease-in-out infinite;
+}
+.song.on .sbox::after {
+  background-image: var(--spk-g), var(--spk-g), var(--spk-g), var(--spk-g), var(--spk-g);
+  background-size: 14px 14px, 10px 10px, 16px 16px, 10px 10px, 12px 12px;
+  background-position: 28% 100%, 78% 0, 100% 70%, 0 20%, 56% 100%;
+  animation: spk 3.3s ease-in-out -1.2s infinite;
+}
+@keyframes spk { 0%, 100% { opacity: .08; } 50% { opacity: 1; } }
+/* isi kotak yang menyala: teks dibuat terang, bar dan ombak disesuaikan supaya tetap kelihatan di atas pink */
+.song.on .stt { color: #fff; }
+.song.on .ssg { color: #ffe3ec; }
+.song.on .spr { color: #ffeef3; }
+.song.on .sbar { background: rgba(255, 255, 255, .28); }
+.song.on .sfill { background: #ffe3ec; }
+.song.on .sfill::before { filter: brightness(1.3); }
+@media (prefers-reduced-motion: reduce) {
+  .song.on .sbox, .song.on .sbox::before, .song.on .sbox::after { animation: none; }
+  .song.on .sbox::before, .song.on .sbox::after { opacity: .85; }
+}
 .srow { display: flex; align-items: center; gap: 12px; }
 .sart { width: 62px; height: 62px; border-radius: 10px; display: grid; place-items: center; flex: none; }
 .sart svg { width: 42px; height: 42px; }
@@ -571,28 +616,33 @@ body.splash-on #snow, body.splash-on #bubbles { z-index: 49; }
 .spr { display: flex; align-items: flex-end; gap: 8px; margin-top: 6px; font-family: var(--mono); font-size: 13px; color: var(--muted); }
 .sel, .srm { flex: none; min-width: 40px; line-height: 1; padding-bottom: 4px; }
 .srm { text-align: right; }
-.sbw { position: relative; flex: 1; height: 34px; margin: 0 4px 0 8px; cursor: pointer; touch-action: none; }
+.sbw { position: relative; flex: 1; height: 36px; margin: 0 4px 0 8px; cursor: pointer; touch-action: none; }
 .sbw:focus-visible { outline-offset: 0; border-radius: 8px; }
-/* bar lagu: bar tetap tebal. Waktu lagu main, bagian yang sudah terputar punya lapisan ombak transparan
-   yang naik di atas bar dan bergerak (dua lapis, arah dan kecepatan beda). Lagu dijeda: ombak turun, tinggal bar.
-   Kelas .on dipasang script.js waktu lagu main. */
+/* bar lagu: bar tetap tebal. Waktu lagu main, bagian yang sudah terputar punya tiga lapis ombak transparan
+   (pink, putih, biru muda) yang naik di atas bar. Tiap lapis bentuknya tinggi-rendah acak, bergeser dengan
+   kecepatan beda, dan tingginya naik-turun sendiri-sendiri dengan irama tidak beraturan.
+   Lagu dijeda: ombak berhenti dan turun, tinggal bar. Kelas .on dipasang script.js waktu lagu main. */
 .sbar { position: absolute; left: 0; right: 0; bottom: 6px; height: 8px; border-radius: 99px; background: rgba(255, 221, 228, .18); }
 .sfill { position: relative; height: 100%; width: 0; border-radius: 99px; background: #ff8fab; }
-.sfill::before, .sfill::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: calc(100% - 2px); height: 16px; pointer-events: none;
+.sfill::before, .sfill::after, .sfill > i {
+  content: ""; display: block; position: absolute; left: 0; right: 0; bottom: calc(100% - 2px); height: 24px; pointer-events: none;
   background-repeat: repeat-x; background-position: 0 100%;
-  transform-origin: 50% 100%; transform: scaleY(0); transition: transform .5s ease;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
-          mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
+  transform-origin: 50% 100%; transform: scaleY(0); transition: transform .6s ease;
+  animation-play-state: paused;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
 }
-.sfill::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 16'%3E%3Cpath d='M0 16V9Q11 -1 22 9T44 9V16Z' fill='%23ff8fab' fill-opacity='.6'/%3E%3C/svg%3E"); background-size: 44px 16px; }
-.sfill::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 16'%3E%3Cpath d='M0 16V10Q15 0 30 10T60 10V16Z' fill='%23ffd27a' fill-opacity='.5'/%3E%3C/svg%3E"); background-size: 60px 16px; }
-.song.on .sfill::before, .song.on .sfill::after { transform: scaleY(1); }
-.song.on .sfill::before { animation: wavea 1.8s linear infinite; }
-.song.on .sfill::after { animation: waveb 2.7s linear infinite; }
-@keyframes wavea { to { background-position-x: 44px; } }
-@keyframes waveb { to { background-position-x: -60px; } }
-@media (prefers-reduced-motion: reduce) { .song.on .sfill::before, .song.on .sfill::after { animation: none; } }
+.sfill::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 211 24'%3E%3Cpath d='M0.0 11.0 C5.8 11.0 11.5 21.5 17.9 20.9 C24.2 20.3 30.9 7.1 38.2 7.6 C45.6 8.0 54.3 22.4 62.1 23.7 C69.8 24.0 77.3 15.7 84.5 15.7 C91.6 15.7 98.5 24.0 104.9 23.7 C111.3 22.6 115.2 9.4 122.8 9.4 C130.4 9.3 143.5 24.0 150.7 23.4 C158.0 22.9 159.0 6.4 166.2 6.1 C173.5 5.7 186.6 20.4 194.1 21.2 C201.5 22.1 205.2 11.1 211.0 11.0 L211 24 L0 24 Z' fill='%23ff8fab' fill-opacity='.9'/%3E%3C/svg%3E"); background-size: 211px 24px; animation: wx1 5.5s linear infinite, wy1 3.7s ease-in-out infinite; }
+.sfill::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 263 24'%3E%3Cpath d='M0.0 13.6 C7.4 13.1 16.5 21.1 23.7 21.0 C31.0 20.8 36.2 12.9 43.6 12.8 C51.1 12.7 61.2 20.9 68.6 20.1 C75.9 19.3 81.4 7.4 87.8 8.1 C94.2 8.7 100.0 24.0 107.0 24.0 C114.1 23.8 123.2 7.4 130.3 6.8 C137.3 6.1 142.2 19.2 149.3 20.2 C156.3 21.1 165.5 12.7 172.8 12.5 C180.0 12.4 184.7 21.0 192.8 19.2 C201.0 17.5 213.2 1.3 221.5 2.0 C229.7 2.8 235.3 21.9 242.2 23.8 C249.1 24.0 255.6 14.1 263.0 13.6 L263 24 L0 24 Z' fill='%23f3f5fa' fill-opacity='.5'/%3E%3C/svg%3E"); background-size: 263px 24px; animation: wx2 7.5s linear infinite, wy2 4.9s ease-in-out infinite; }
+.sfill > i { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 317 24'%3E%3Cpath d='M0.0 6.2 C8.6 5.5 16.8 20.5 25.1 20.2 C33.3 19.9 41.8 3.6 49.7 4.2 C57.5 4.9 65.4 24.0 72.1 23.9 C78.9 23.3 83.1 1.6 90.2 0.9 C97.3 0.2 107.7 18.4 114.7 19.7 C121.7 21.0 125.1 8.4 132.0 8.7 C138.9 9.0 147.7 20.1 156.0 21.4 C164.3 22.6 174.4 15.9 181.9 16.1 C189.4 16.3 192.8 24.0 201.0 22.7 C209.1 20.6 223.1 4.2 230.6 3.8 C238.0 3.4 239.4 19.8 245.7 20.2 C251.9 20.6 260.6 5.6 268.1 6.2 C275.6 6.9 282.5 24.0 290.6 24.0 C298.8 24.0 308.4 6.8 317.0 6.2 L317 24 L0 24 Z' fill='%239fc9f2' fill-opacity='.58'/%3E%3C/svg%3E"); background-size: 317px 24px; animation: wx3 10s linear infinite, wy3 6.3s ease-in-out infinite; }
+.song.on .sfill::before, .song.on .sfill::after, .song.on .sfill > i { transform: scaleY(1); animation-play-state: running; }
+@keyframes wx1 { to { background-position-x: 211px; } }
+@keyframes wx2 { to { background-position-x: -263px; } }
+@keyframes wx3 { to { background-position-x: 317px; } }
+@keyframes wy1 { 0%, 100% { scale: 1 .5; } 14% { scale: 1 1; } 29% { scale: 1 .4; } 47% { scale: 1 .85; } 63% { scale: 1 .3; } 81% { scale: 1 .95; } }
+@keyframes wy2 { 0%, 100% { scale: 1 1; } 18% { scale: 1 .35; } 36% { scale: 1 .8; } 52% { scale: 1 .5; } 71% { scale: 1 1; } 88% { scale: 1 .3; } }
+@keyframes wy3 { 0%, 100% { scale: 1 .6; } 22% { scale: 1 1; } 39% { scale: 1 .3; } 58% { scale: 1 .75; } 77% { scale: 1 .45; } }
+@media (prefers-reduced-motion: reduce) { .sfill::before, .sfill::after, .sfill > i { animation: none !important; } }
 .scat { position: absolute; bottom: -5px; left: 0; width: 30px; height: 30px; margin-left: -15px; pointer-events: none; }
 .scat svg, .sfish svg { display: block; width: 100%; height: 100%; }
 .sfish { flex: none; width: 26px; height: 26px; margin-bottom: 1px; }
