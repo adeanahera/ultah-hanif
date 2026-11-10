@@ -187,7 +187,8 @@ window.scratchify = function (cv, onDone, opts) {
   var splash = document.getElementById("splash");
   var musicBtn = document.getElementById("musicBtn");
 
-  function label() { musicBtn.textContent = bgm.paused ? "putar musik" : "jeda musik"; }
+  function label() { musicBtn.textContent = bgm.paused ? "putar musik" : "jeda musik"; musicBtn.classList.toggle("idle", bgm.paused); }
+  musicBtn.classList.toggle("idle", bgm.paused);
   bgm.addEventListener("play", label);
   bgm.addEventListener("pause", label);
   // Dua lagu latar diputar bergantian terus-menerus: musik.mp3 -> musik2.mp3 -> musik.mp3 -> ...
@@ -1184,6 +1185,32 @@ window.scratchify = function (cv, onDone, opts) {
   }
   setup(document.querySelector(".hero"));
   setup(document.querySelector(".splash-head"), "hballs-splash");
+})();
+
+// Judul utama: tiap huruf naik-turun bergelombang dan kilau lewat dari kiri ke kanan (dimatikan kalau "kurangi animasi" aktif).
+(function () {
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var h1 = document.querySelector(".hero h1");
+  if (!h1) return;
+  var full = Array.prototype.map.call(h1.querySelectorAll(".l1, .l2"), function (l) { return l.textContent.trim(); }).join(" ");
+  var idx = 0;
+  Array.prototype.forEach.call(h1.querySelectorAll(".l1, .l2"), function (line) {
+    var words = line.textContent.trim().split(/\s+/);
+    line.textContent = "";
+    words.forEach(function (w, wi) {
+      var ws = document.createElement("span");
+      ws.className = "w";
+      for (var k = 0; k < w.length; k++) {
+        var c = document.createElement("span");
+        c.className = "ch"; c.style.setProperty("--i", idx++); c.setAttribute("aria-hidden", "true");
+        c.textContent = w.charAt(k);
+        ws.appendChild(c);
+      }
+      line.appendChild(ws);
+      if (wi < words.length - 1) line.appendChild(document.createTextNode(" "));
+    });
+  });
+  h1.setAttribute("aria-label", full);
 })();
 
 // Tambahan interaksi: efek ketuk, jejak kursor, salju yang menghindar, geser/panah pindah halaman,
