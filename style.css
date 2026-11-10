@@ -882,3 +882,69 @@ main.paged > section.on .star.lit { animation-name: starpop, startwinkle, stargl
   .hero h1 .ch, .pg-num.on, .pg-num.on .ey, .music.idle, .music.idle::before, .music.idle::after,
   .cake-hint, .cake-hint::before, main.paged > section.on .star, main.paged > section.on .star.lit { animation: none !important; }
 }
+
+/* ---------- tambahan gerak 2: foto album, segel amplop, tic tac toe, kucing halaman 04 ---------- */
+/* foto yang baru terbuka membal + miring sebentar; foto yang sudah terbuka terasa "empuk" waktu ditekan */
+.al.got img, .pola .ph.got img { animation: gotpop .75s cubic-bezier(.3, 1.4, .5, 1); }
+@keyframes gotpop {
+  0%   { scale: 1; rotate: 0deg; }
+  22%  { scale: 1.16; rotate: -5deg; }
+  48%  { scale: .95; rotate: 3.5deg; }
+  72%  { scale: 1.05; rotate: -1.5deg; }
+  100% { scale: 1; rotate: 0deg; }
+}
+.al:not(.covered) img, .pola .ph:not(.covered) img { transition: scale .15s ease; }
+.al:not(.covered):active img, .pola .ph:not(.covered):active img { scale: .94; }
+
+/* segel ♡ amplop berdetak seperti jantung dengan cincin yang melebar, sampai amplopnya dibuka */
+.sealed:not(.opened) .env-seal { animation: sealbeat 1.4s ease-in-out infinite; }
+.sealed:not(.opened) .env-seal::after {
+  content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px solid #ff8fab; pointer-events: none;
+  animation: sealring 1.4s ease-out infinite;
+}
+@keyframes sealbeat { 0%, 100% { scale: 1; } 14% { scale: 1.24; } 28% { scale: 1; } 42% { scale: 1.17; } 70% { scale: 1; } }
+@keyframes sealring { 0% { scale: 1; opacity: .85; } 70%, 100% { scale: 2.1; opacity: 0; } }
+
+/* tic tac toe: petak kosong berkelip pelan bergantian, petak kemenangan meloncat berurutan */
+.ttt-cell:empty:not(:disabled) { animation: tttidle 3.6s ease-in-out infinite; }
+@keyframes tttidle {
+  0%, 100% { background: rgba(255, 221, 228, .07); border-color: rgba(255, 221, 228, .35); scale: 1; }
+  50%      { background: rgba(255, 221, 228, .17); border-color: rgba(255, 221, 228, .8); scale: 1.035; }
+}
+.ttt-cell.win { animation: tttwincell .6s ease-in-out infinite alternate; }
+@keyframes tttwincell { from { scale: 1; } to { scale: 1.06; } }
+.ttt-cell:empty:not(:disabled):nth-child(1) { animation-delay: 0.0s; }
+.ttt-cell.win:nth-child(1) svg { animation-delay: 0.00s; }
+.ttt-cell:empty:not(:disabled):nth-child(2) { animation-delay: 0.4s; }
+.ttt-cell.win:nth-child(2) svg { animation-delay: 0.08s; }
+.ttt-cell:empty:not(:disabled):nth-child(3) { animation-delay: 0.8s; }
+.ttt-cell.win:nth-child(3) svg { animation-delay: 0.16s; }
+.ttt-cell:empty:not(:disabled):nth-child(4) { animation-delay: 1.2s; }
+.ttt-cell.win:nth-child(4) svg { animation-delay: 0.24s; }
+.ttt-cell:empty:not(:disabled):nth-child(5) { animation-delay: 1.6s; }
+.ttt-cell.win:nth-child(5) svg { animation-delay: 0.32s; }
+.ttt-cell:empty:not(:disabled):nth-child(6) { animation-delay: 2.0s; }
+.ttt-cell.win:nth-child(6) svg { animation-delay: 0.40s; }
+.ttt-cell:empty:not(:disabled):nth-child(7) { animation-delay: 2.4s; }
+.ttt-cell.win:nth-child(7) svg { animation-delay: 0.48s; }
+.ttt-cell:empty:not(:disabled):nth-child(8) { animation-delay: 2.8s; }
+.ttt-cell.win:nth-child(8) svg { animation-delay: 0.56s; }
+.ttt-cell:empty:not(:disabled):nth-child(9) { animation-delay: 3.2s; }
+.ttt-cell.win:nth-child(9) svg { animation-delay: 0.64s; }
+
+/* kucing halaman 04: sesekali miring kepala sambil menarik napas */
+.duo-c .chr { transform-origin: 50% 100%; animation: chridle 4.6s ease-in-out infinite; }
+.duo-c:nth-child(2) .chr { animation-delay: -2.3s; }
+@keyframes chridle {
+  0%, 38%, 100% { rotate: 0deg; scale: 1 1; }
+  18%           { rotate: 0deg; scale: 1.015 .985; }
+  46%           { rotate: -5deg; scale: 1 1; }
+  58%           { rotate: 4deg; }
+  70%           { rotate: 0deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .al.got img, .pola .ph.got img, .sealed:not(.opened) .env-seal, .sealed:not(.opened) .env-seal::after,
+  .ttt-cell:empty:not(:disabled), .ttt-cell.win, .duo-c .chr { animation: none !important; }
+}
+.ttt-cell:empty:not(:disabled):hover { animation: none; }
