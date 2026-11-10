@@ -571,11 +571,11 @@ body.splash-on #snow, body.splash-on #bubbles { z-index: 49; }
 .spr { display: flex; align-items: flex-end; gap: 8px; margin-top: 6px; font-family: var(--mono); font-size: 13px; color: var(--muted); }
 .sel, .srm { flex: none; min-width: 40px; line-height: 1; padding-bottom: 4px; }
 .srm { text-align: right; }
-.sbw { position: relative; flex: 1; height: 44px; margin: 0 4px 0 8px; cursor: pointer; touch-action: none; }
+.sbw { position: relative; flex: 1; height: 34px; margin: 0 4px 0 8px; cursor: pointer; touch-action: none; }
 .sbw:focus-visible { outline-offset: 0; border-radius: 8px; }
 .sbar { position: absolute; left: 0; right: 0; bottom: 6px; height: 8px; border-radius: 99px; background: rgba(255, 221, 228, .18); overflow: hidden; }
 .sfill { height: 100%; width: 0; border-radius: 99px; background: #ff8fab; }
-.scat { position: absolute; bottom: 11px; left: 0; width: 30px; height: 30px; margin-left: -15px; pointer-events: none; }
+.scat { position: absolute; bottom: -5px; left: 0; width: 30px; height: 30px; margin-left: -15px; pointer-events: none; }
 .scat svg, .sfish svg { display: block; width: 100%; height: 100%; }
 .sfish { flex: none; width: 26px; height: 26px; margin-bottom: 1px; }
 .song.nobar .spr { display: none; }
