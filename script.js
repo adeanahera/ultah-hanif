@@ -976,7 +976,20 @@ window.scratchify = function (cv, onDone, opts) {
           '<div class="sbar"><div class="sfill"><i></i></div></div><span class="scat">' + ICO("ico-catb") + '</span></div>' +
         '<span class="sfish" aria-hidden="true">' + ICO("ico-fish") + '</span><span class="srm">--:--</span></div></div>' +
       '<p class="sdesc"></p>';
-    root.querySelector(".sdesc").textContent = d.desc || "";
+    (function (el, text) {
+      // deskripsi dipecah per huruf (dibungkus per kata supaya tidak terpotong di tengah kata); muncul satu-satu lewat CSS saat lagunya main
+      if (!text) { el.hidden = true; return; }
+      el.setAttribute("aria-label", text);
+      var n = 0;
+      text.split(/\s+/).forEach(function (w, wi, arr) {
+        var ws = document.createElement("span"); ws.className = "w"; ws.setAttribute("aria-hidden", "true");
+        for (var k = 0; k < w.length; k++) {
+          var c = document.createElement("span"); c.className = "dc"; c.style.setProperty("--i", n++); c.textContent = w.charAt(k); ws.appendChild(c);
+        }
+        el.appendChild(ws);
+        if (wi < arr.length - 1) { el.appendChild(document.createTextNode(" ")); n++; }
+      });
+    })(root.querySelector(".sdesc"), d.desc || "");
     list.appendChild(root);
 
     var s = {
@@ -1215,6 +1228,23 @@ window.scratchify = function (cv, onDone, opts) {
     });
   });
   h1.setAttribute("aria-label", full);
+})();
+
+// Kucing di halaman 04: gambarnya disalin langsung ke dalam <svg> (bukan lewat <use>) supaya matanya bisa berkedip.
+(function () {
+  Array.prototype.forEach.call(document.querySelectorAll(".duo .chr"), function (svg) {
+    var use = svg.querySelector("use");
+    if (!use) return;
+    var id = (use.getAttribute("href") || use.getAttribute("xlink:href") || "").replace("#", "");
+    var sym = id && document.getElementById(id);
+    if (!sym) return;
+    var frag = document.createDocumentFragment();
+    Array.prototype.forEach.call(sym.childNodes, function (n) { frag.appendChild(n.cloneNode(true)); });
+    svg.removeChild(use);
+    svg.appendChild(frag);
+    Array.prototype.forEach.call(svg.querySelectorAll('ellipse[cy="54"][fill="#1b2138"]'), function (e) { e.setAttribute("class", "eye"); });
+    Array.prototype.forEach.call(svg.querySelectorAll('circle[cy="52.4"]'), function (e) { e.setAttribute("class", "eyehl"); });
+  });
 })();
 
 // Tambahan interaksi: efek ketuk, jejak kursor, salju yang menghindar, geser/panah pindah halaman,
