@@ -339,7 +339,7 @@ window.scratchify = function (cv, onDone, opts) {
       if (a === "prev") show(cur - 1); else if (a === "next") show(cur + 1); else closeBox();
       return;
     }
-    var img = e.target.closest(".ph img");
+    var img = e.target.closest(".ph img, .mv-photo img");
     if (img) { boxImg.src = img.src; box.classList.remove("scroll"); box.classList.add("on"); return; }
     if (box.classList.contains("on")) {
       if (!box.classList.contains("scroll") || e.target === box) closeBox();
